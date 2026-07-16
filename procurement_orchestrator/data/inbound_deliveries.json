@@ -1,0 +1,121 @@
+{
+  "_meta": {
+    "synthetic": true,
+    "note": "Academic prototype mock data \u2014 no real company, supplier, or figure.",
+    "generated_at": "2026-07-16T23:18:51.968896+00:00"
+  },
+  "records": [
+    {
+      "delivery_id": "DLV-00001",
+      "po_id": "PO-00001",
+      "tracking_number": "TRK-892495",
+      "carrier": "Synthetic Carrier X",
+      "status": "in_transit",
+      "eta": "2026-07-18"
+    },
+    {
+      "delivery_id": "DLV-00002",
+      "po_id": "PO-00002",
+      "tracking_number": "TRK-757924",
+      "carrier": "Synthetic Carrier Z",
+      "status": "in_transit",
+      "eta": "2026-07-27"
+    },
+    {
+      "delivery_id": "DLV-00003",
+      "po_id": "PO-00003",
+      "tracking_number": "TRK-725380",
+      "carrier": "Synthetic Carrier Y",
+      "status": "in_transit",
+      "eta": "2026-07-26"
+    },
+    {
+      "delivery_id": "DLV-00004",
+      "po_id": "PO-00004",
+      "tracking_number": "TRK-724834",
+      "carrier": "Synthetic Carrier Z",
+      "status": "customs_hold",
+      "eta": "2026-07-22"
+    },
+    {
+      "delivery_id": "DLV-00005",
+      "po_id": "PO-00005",
+      "tracking_number": "TRK-680099",
+      "carrier": "Synthetic Carrier Z",
+      "status": "in_transit",
+      "eta": "2026-07-17"
+    },
+    {
+      "delivery_id": "DLV-00006",
+      "po_id": "PO-00006",
+      "tracking_number": "TRK-814825",
+      "carrier": "Synthetic Carrier Y",
+      "status": "delivered",
+      "eta": "2026-07-24"
+    },
+    {
+      "delivery_id": "DLV-00007",
+      "po_id": "PO-00007",
+      "tracking_number": "TRK-216970",
+      "carrier": "Synthetic Carrier Y",
+      "status": "delayed",
+      "eta": "2026-07-19"
+    },
+    {
+      "delivery_id": "DLV-00008",
+      "po_id": "PO-00008",
+      "tracking_number": "TRK-575763",
+      "carrier": "Synthetic Carrier Z",
+      "status": "in_transit",
+      "eta": "2026-07-22"
+    },
+    {
+      "delivery_id": "DLV-00009",
+      "po_id": "PO-00009",
+      "tracking_number": "TRK-624902",
+      "carrier": "Synthetic Carrier Z",
+      "status": "in_transit",
+      "eta": "2026-07-17"
+    },
+    {
+      "delivery_id": "DLV-00010",
+      "po_id": "PO-00010",
+      "tracking_number": "TRK-755674",
+      "carrier": "Synthetic Carrier Z",
+      "status": "delayed",
+      "eta": "2026-07-30"
+    },
+    {
+      "delivery_id": "DLV-00011",
+      "po_id": "PO-00011",
+      "tracking_number": "TRK-738551",
+      "carrier": "Synthetic Carrier X",
+      "status": "in_transit",
+      "eta": "2026-07-25"
+    },
+    {
+      "delivery_id": "DLV-00012",
+      "po_id": "PO-00012",
+      "tracking_number": "TRK-899550",
+      "carrier": "Synthetic Carrier Z",
+      "status": "in_transit",
+      "eta": "2026-07-30"
+    },
+    {
+      "delivery_id": "DLV-DEMO-9001",
+      "po_id": "PO-DEMO-9001",
+      "tracking_number": "TRK-DEMO-9001",
+      "carrier": "Synthetic Carrier X",
+      "status": "delayed",
+      "eta": "2026-07-20"
+    },
+    {
+      "delivery_id": "DLV-DEMO-9003",
+      "po_id": "PO-DEMO-9003",
+      "tracking_number": "TRK-DEMO-9003",
+      "carrier": "Synthetic Carrier Y",
+      "status": "in_transit",
+      "eta": "2026-07-17"
+    }
+  ]
+}

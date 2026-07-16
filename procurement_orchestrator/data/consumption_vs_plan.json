@@ -1,0 +1,99 @@
+{
+  "_meta": {
+    "synthetic": true,
+    "note": "Academic prototype mock data \u2014 no real company, supplier, or figure.",
+    "generated_at": "2026-07-16T23:18:51.968896+00:00"
+  },
+  "records": [
+    {
+      "part_number": "PN-00001",
+      "planned_units_30d": 2796.0,
+      "actual_units_30d": 3464.0,
+      "deviation_pct": 23.9
+    },
+    {
+      "part_number": "PN-00002",
+      "planned_units_30d": 1722.0,
+      "actual_units_30d": 1379.0,
+      "deviation_pct": -19.9
+    },
+    {
+      "part_number": "PN-00003",
+      "planned_units_30d": 1407.0,
+      "actual_units_30d": 2233.0,
+      "deviation_pct": 58.7
+    },
+    {
+      "part_number": "PN-00004",
+      "planned_units_30d": 2517.0,
+      "actual_units_30d": 2304.0,
+      "deviation_pct": -8.5
+    },
+    {
+      "part_number": "PN-00005",
+      "planned_units_30d": 1102.0,
+      "actual_units_30d": 1334.0,
+      "deviation_pct": 21.1
+    },
+    {
+      "part_number": "PN-00006",
+      "planned_units_30d": 697.0,
+      "actual_units_30d": 947.0,
+      "deviation_pct": 35.9
+    },
+    {
+      "part_number": "PN-00007",
+      "planned_units_30d": 2540.0,
+      "actual_units_30d": 4014.0,
+      "deviation_pct": 58.0
+    },
+    {
+      "part_number": "PN-00008",
+      "planned_units_30d": 1832.0,
+      "actual_units_30d": 1490.0,
+      "deviation_pct": -18.7
+    },
+    {
+      "part_number": "PN-00009",
+      "planned_units_30d": 2149.0,
+      "actual_units_30d": 3336.0,
+      "deviation_pct": 55.2
+    },
+    {
+      "part_number": "PN-00010",
+      "planned_units_30d": 913.0,
+      "actual_units_30d": 1073.0,
+      "deviation_pct": 17.5
+    },
+    {
+      "part_number": "PN-00011",
+      "planned_units_30d": 2016.0,
+      "actual_units_30d": 3161.0,
+      "deviation_pct": 56.8
+    },
+    {
+      "part_number": "PN-00012",
+      "planned_units_30d": 2822.0,
+      "actual_units_30d": 3894.0,
+      "deviation_pct": 38.0
+    },
+    {
+      "part_number": "DEMO-PN-9001",
+      "planned_units_30d": 1200.0,
+      "actual_units_30d": 1200.0,
+      "deviation_pct": 0.0
+    },
+    {
+      "part_number": "DEMO-PN-9002",
+      "planned_units_30d": 1000.0,
+      "actual_units_30d": 1010.0,
+      "deviation_pct": 1.0
+    },
+    {
+      "part_number": "DEMO-PN-9003",
+      "planned_units_30d": 900.0,
+      "actual_units_30d": 905.0,
+      "deviation_pct": 0.6
+    }
+  ]
+}

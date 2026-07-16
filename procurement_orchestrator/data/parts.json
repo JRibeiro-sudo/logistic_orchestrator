@@ -1,0 +1,114 @@
+{
+  "_meta": {
+    "synthetic": true,
+    "note": "Academic prototype mock data \u2014 no real company, supplier, or figure.",
+    "generated_at": "2026-07-16T23:18:51.968896+00:00"
+  },
+  "records": [
+    {
+      "part_number": "PN-00001",
+      "description": "Compressor Valve (synthetic)",
+      "supplier_id": "SUP-002",
+      "unit_cost_eur": 20.93,
+      "safety_stock_units": 358
+    },
+    {
+      "part_number": "PN-00002",
+      "description": "PCB Assembly (synthetic)",
+      "supplier_id": "SUP-001",
+      "unit_cost_eur": 48.36,
+      "safety_stock_units": 416
+    },
+    {
+      "part_number": "PN-00003",
+      "description": "Heat Exchanger Fin (synthetic)",
+      "supplier_id": "SUP-006",
+      "unit_cost_eur": 60.06,
+      "safety_stock_units": 264
+    },
+    {
+      "part_number": "PN-00004",
+      "description": "Motor Bracket (synthetic)",
+      "supplier_id": "SUP-002",
+      "unit_cost_eur": 39.01,
+      "safety_stock_units": 192
+    },
+    {
+      "part_number": "PN-00005",
+      "description": "Sensor Module (synthetic)",
+      "supplier_id": "SUP-001",
+      "unit_cost_eur": 64.86,
+      "safety_stock_units": 131
+    },
+    {
+      "part_number": "PN-00006",
+      "description": "Gasket Set (synthetic)",
+      "supplier_id": "SUP-006",
+      "unit_cost_eur": 36.79,
+      "safety_stock_units": 192
+    },
+    {
+      "part_number": "PN-00007",
+      "description": "Compressor Valve (synthetic)",
+      "supplier_id": "SUP-002",
+      "unit_cost_eur": 19.48,
+      "safety_stock_units": 440
+    },
+    {
+      "part_number": "PN-00008",
+      "description": "PCB Assembly (synthetic)",
+      "supplier_id": "SUP-003",
+      "unit_cost_eur": 10.03,
+      "safety_stock_units": 244
+    },
+    {
+      "part_number": "PN-00009",
+      "description": "Heat Exchanger Fin (synthetic)",
+      "supplier_id": "SUP-001",
+      "unit_cost_eur": 31.47,
+      "safety_stock_units": 226
+    },
+    {
+      "part_number": "PN-00010",
+      "description": "Motor Bracket (synthetic)",
+      "supplier_id": "SUP-005",
+      "unit_cost_eur": 23.59,
+      "safety_stock_units": 72
+    },
+    {
+      "part_number": "PN-00011",
+      "description": "Sensor Module (synthetic)",
+      "supplier_id": "SUP-006",
+      "unit_cost_eur": 39.86,
+      "safety_stock_units": 113
+    },
+    {
+      "part_number": "PN-00012",
+      "description": "Gasket Set (synthetic)",
+      "supplier_id": "SUP-004",
+      "unit_cost_eur": 8.08,
+      "safety_stock_units": 200
+    },
+    {
+      "part_number": "DEMO-PN-9001",
+      "description": "Gasket Set (synthetic, demo scenario: transport delay)",
+      "supplier_id": "SUP-DEMO-1",
+      "unit_cost_eur": 4.5,
+      "safety_stock_units": 200
+    },
+    {
+      "part_number": "DEMO-PN-9002",
+      "description": "Compressor Valve (synthetic, demo scenario: supplier capacity)",
+      "supplier_id": "SUP-DEMO-2",
+      "unit_cost_eur": 62.0,
+      "safety_stock_units": 150
+    },
+    {
+      "part_number": "DEMO-PN-9003",
+      "description": "PCB Assembly (synthetic, demo scenario: guardrail rejection)",
+      "supplier_id": "SUP-DEMO-1",
+      "unit_cost_eur": 18.0,
+      "safety_stock_units": 120
+    }
+  ]
+}

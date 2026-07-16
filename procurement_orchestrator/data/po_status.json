@@ -1,0 +1,114 @@
+{
+  "_meta": {
+    "synthetic": true,
+    "note": "Academic prototype mock data \u2014 no real company, supplier, or figure.",
+    "generated_at": "2026-07-16T23:18:51.968896+00:00"
+  },
+  "records": [
+    {
+      "po_id": "PO-00001",
+      "part_number": "PN-00001",
+      "supplier_id": "SUP-002",
+      "status": "delayed",
+      "promised_date": "2026-07-19"
+    },
+    {
+      "po_id": "PO-00002",
+      "part_number": "PN-00002",
+      "supplier_id": "SUP-001",
+      "status": "at_risk",
+      "promised_date": "2026-07-25"
+    },
+    {
+      "po_id": "PO-00003",
+      "part_number": "PN-00003",
+      "supplier_id": "SUP-006",
+      "status": "at_risk",
+      "promised_date": "2026-07-17"
+    },
+    {
+      "po_id": "PO-00004",
+      "part_number": "PN-00004",
+      "supplier_id": "SUP-002",
+      "status": "delayed",
+      "promised_date": "2026-07-17"
+    },
+    {
+      "po_id": "PO-00005",
+      "part_number": "PN-00005",
+      "supplier_id": "SUP-001",
+      "status": "confirmed",
+      "promised_date": "2026-08-05"
+    },
+    {
+      "po_id": "PO-00006",
+      "part_number": "PN-00006",
+      "supplier_id": "SUP-006",
+      "status": "open",
+      "promised_date": "2026-07-30"
+    },
+    {
+      "po_id": "PO-00007",
+      "part_number": "PN-00007",
+      "supplier_id": "SUP-002",
+      "status": "delayed",
+      "promised_date": "2026-08-05"
+    },
+    {
+      "po_id": "PO-00008",
+      "part_number": "PN-00008",
+      "supplier_id": "SUP-003",
+      "status": "open",
+      "promised_date": "2026-07-26"
+    },
+    {
+      "po_id": "PO-00009",
+      "part_number": "PN-00009",
+      "supplier_id": "SUP-001",
+      "status": "open",
+      "promised_date": "2026-07-25"
+    },
+    {
+      "po_id": "PO-00010",
+      "part_number": "PN-00010",
+      "supplier_id": "SUP-005",
+      "status": "delayed",
+      "promised_date": "2026-07-20"
+    },
+    {
+      "po_id": "PO-00011",
+      "part_number": "PN-00011",
+      "supplier_id": "SUP-006",
+      "status": "confirmed",
+      "promised_date": "2026-07-29"
+    },
+    {
+      "po_id": "PO-00012",
+      "part_number": "PN-00012",
+      "supplier_id": "SUP-004",
+      "status": "at_risk",
+      "promised_date": "2026-07-15"
+    },
+    {
+      "po_id": "PO-DEMO-9001",
+      "part_number": "DEMO-PN-9001",
+      "supplier_id": "SUP-DEMO-1",
+      "status": "confirmed",
+      "promised_date": "2026-07-14"
+    },
+    {
+      "po_id": "PO-DEMO-9002",
+      "part_number": "DEMO-PN-9002",
+      "supplier_id": "SUP-DEMO-2",
+      "status": "at_risk",
+      "promised_date": "2026-08-03"
+    },
+    {
+      "po_id": "PO-DEMO-9003",
+      "part_number": "DEMO-PN-9003",
+      "supplier_id": "SUP-DEMO-1",
+      "status": "at_risk",
+      "promised_date": "2026-07-17"
+    }
+  ]
+}

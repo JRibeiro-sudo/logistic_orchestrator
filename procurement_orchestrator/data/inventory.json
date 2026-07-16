@@ -1,0 +1,114 @@
+{
+  "_meta": {
+    "synthetic": true,
+    "note": "Academic prototype mock data \u2014 no real company, supplier, or figure.",
+    "generated_at": "2026-07-16T23:18:51.968896+00:00"
+  },
+  "records": [
+    {
+      "part_number": "PN-00001",
+      "current_stock_units": 867.7,
+      "daily_consumption_units": 335.2,
+      "system_vs_physical_delta_flag": false,
+      "as_of": "2026-07-16T23:18:51.969198+00:00"
+    },
+    {
+      "part_number": "PN-00002",
+      "current_stock_units": 695.9,
+      "daily_consumption_units": 239.4,
+      "system_vs_physical_delta_flag": true,
+      "as_of": "2026-07-16T23:18:51.969204+00:00"
+    },
+    {
+      "part_number": "PN-00003",
+      "current_stock_units": 146.1,
+      "daily_consumption_units": 106.6,
+      "system_vs_physical_delta_flag": true,
+      "as_of": "2026-07-16T23:18:51.969207+00:00"
+    },
+    {
+      "part_number": "PN-00004",
+      "current_stock_units": 73.1,
+      "daily_consumption_units": 108.5,
+      "system_vs_physical_delta_flag": false,
+      "as_of": "2026-07-16T23:18:51.969210+00:00"
+    },
+    {
+      "part_number": "PN-00005",
+      "current_stock_units": 431.6,
+      "daily_consumption_units": 261.6,
+      "system_vs_physical_delta_flag": false,
+      "as_of": "2026-07-16T23:18:51.969212+00:00"
+    },
+    {
+      "part_number": "PN-00006",
+      "current_stock_units": 128.3,
+      "daily_consumption_units": 99.6,
+      "system_vs_physical_delta_flag": false,
+      "as_of": "2026-07-16T23:18:51.969217+00:00"
+    },
+    {
+      "part_number": "PN-00007",
+      "current_stock_units": 680.1,
+      "daily_consumption_units": 266.3,
+      "system_vs_physical_delta_flag": false,
+      "as_of": "2026-07-16T23:18:51.969220+00:00"
+    },
+    {
+      "part_number": "PN-00008",
+      "current_stock_units": 268.8,
+      "daily_consumption_units": 297.1,
+      "system_vs_physical_delta_flag": false,
+      "as_of": "2026-07-16T23:18:51.969223+00:00"
+    },
+    {
+      "part_number": "PN-00009",
+      "current_stock_units": 1056.5,
+      "daily_consumption_units": 396.0,
+      "system_vs_physical_delta_flag": false,
+      "as_of": "2026-07-16T23:18:51.969226+00:00"
+    },
+    {
+      "part_number": "PN-00010",
+      "current_stock_units": 957.9,
+      "daily_consumption_units": 280.2,
+      "system_vs_physical_delta_flag": false,
+      "as_of": "2026-07-16T23:18:51.969229+00:00"
+    },
+    {
+      "part_number": "PN-00011",
+      "current_stock_units": 44.8,
+      "daily_consumption_units": 107.0,
+      "system_vs_physical_delta_flag": false,
+      "as_of": "2026-07-16T23:18:51.969231+00:00"
+    },
+    {
+      "part_number": "PN-00012",
+      "current_stock_units": 131.5,
+      "daily_consumption_units": 121.7,
+      "system_vs_physical_delta_flag": false,
+      "as_of": "2026-07-16T23:18:51.969233+00:00"
+    },
+    {
+      "part_number": "DEMO-PN-9001",
+      "current_stock_units": 40.0,
+      "daily_consumption_units": 40.0,
+      "system_vs_physical_delta_flag": false,
+      "as_of": "2026-07-16T23:18:51.969498+00:00"
+    },
+    {
+      "part_number": "DEMO-PN-9002",
+      "current_stock_units": 300.0,
+      "daily_consumption_units": 36.0,
+      "system_vs_physical_delta_flag": false,
+      "as_of": "2026-07-16T23:18:51.969502+00:00"
+    },
+    {
+      "part_number": "DEMO-PN-9003",
+      "current_stock_units": 60.0,
+      "daily_consumption_units": 60.0,
+      "system_vs_physical_delta_flag": false,
+      "as_of": "2026-07-16T23:18:51.969504+00:00"
+    }
+  ]
+}

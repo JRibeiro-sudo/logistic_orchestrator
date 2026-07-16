@@ -1,0 +1,57 @@
+{
+  "_meta": {
+    "synthetic": true,
+    "note": "Academic prototype mock data \u2014 no real company, supplier, or figure.",
+    "generated_at": "2026-07-16T23:18:51.968896+00:00"
+  },
+  "records": [
+    {
+      "supplier_id": "SUP-001",
+      "name": "Synthetic Supplier Co. A",
+      "region": "EU-West",
+      "lead_time_days": 3
+    },
+    {
+      "supplier_id": "SUP-002",
+      "name": "Synthetic Supplier Co. B",
+      "region": "EU-East",
+      "lead_time_days": 10
+    },
+    {
+      "supplier_id": "SUP-003",
+      "name": "Synthetic Supplier Co. C",
+      "region": "EU-East",
+      "lead_time_days": 7
+    },
+    {
+      "supplier_id": "SUP-004",
+      "name": "Synthetic Supplier Co. D",
+      "region": "EU-West",
+      "lead_time_days": 3
+    },
+    {
+      "supplier_id": "SUP-005",
+      "name": "Synthetic Supplier Co. E",
+      "region": "EU-West",
+      "lead_time_days": 21
+    },
+    {
+      "supplier_id": "SUP-006",
+      "name": "Synthetic Supplier Co. F",
+      "region": "EU-West",
+      "lead_time_days": 2
+    },
+    {
+      "supplier_id": "SUP-DEMO-1",
+      "name": "Synthetic Supplier Co. Demo-1",
+      "region": "EU-West",
+      "lead_time_days": 3
+    },
+    {
+      "supplier_id": "SUP-DEMO-2",
+      "name": "Synthetic Supplier Co. Demo-2",
+      "region": "APAC",
+      "lead_time_days": 21
+    }
+  ]
+}

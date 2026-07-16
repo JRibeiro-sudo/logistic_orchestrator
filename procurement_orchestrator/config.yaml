@@ -1,0 +1,63 @@
+# Procurement Material Recovery Orchestrator — configuration
+# Academic prototype. All thresholds below are illustrative / synthetic,
+# not derived from any real organisation's operating parameters.
+
+# --- 3.2 Lead-time band routing (deterministic coverage horizon rule) ---
+coverage_horizon:
+  short_lead_time_max_days: 7        # lead_time_days <= this -> "short" band
+  short_band_horizon_hours: 48       # flat horizon for short lead-time parts
+  long_band_multiplier: 1.5          # horizon_hours = lead_time_days * 24 * multiplier
+
+# --- 3.4 Orchestrator dispatch ---
+dispatch:
+  likelihood_threshold: 0.35         # dispatch any cause with likelihood >= this
+
+# --- 3.7 Action synthesis impact tiering ---
+impact:
+  cost_threshold_eur: 2000           # >= this estimated cost -> "high" impact tier
+  # cross_functional_flag (affects committed production schedule) is passed
+  # per-case as a boolean input (see ShortageCase / scenario fixtures) and
+  # also forces impact_tier = "high" when true.
+
+# --- 3.10 Preventive / recurring-risk flag (plain counting query, no AI) ---
+recurring_risk:
+  trigger_count_threshold: 3         # part_number triggers >= this many times...
+  window_days: 90                    # ...within this trailing window -> recurring_risk = true
+
+# --- 3.5b Evidence guardrail: fixed exclusion list for outbound messages ---
+# Messages sent via mock_send_supplier_email / mock_contact_internal_stakeholder
+# are pre-approved templates. This exclusion list is a defense-in-depth check
+# run against the rendered template text before "sending".
+evidence_guardrail:
+  forbidden_terms:
+    - "internal cost"
+    - "our margin"
+    - "unit cost"
+    - "landed cost"
+    - "budget"
+    - "we will pay"
+    - "we guarantee"
+    - "we commit"
+    - "confirmed order"
+    - "promise"
+  # Any other-supplier name appearing in a template is also rejected; the
+  # calling branch supplies the current case's own supplier_id as the only
+  # allowed supplier reference, and the guardrail treats any *other* known
+  # supplier_id/name found in the synthetic supplier master as a violation.
+
+# --- LLM call tuning (model name itself comes from env vars, never here) ---
+llm:
+  triage_temperature: 0.0
+  reasoning_temperature: 0.0
+  guardrail_temperature: 0.0
+  max_tokens: 1024
+
+# --- SQLite case log ---
+storage:
+  db_path: "data/case_log.sqlite3"
+
+# --- Mock data generation ---
+mock_data:
+  seed: 42
+  num_parts: 12
+  num_suppliers: 6
