@@ -4,11 +4,6 @@ import { makePicker, mulberry32 } from './seed'
 const rng = mulberry32(99123)
 const R = makePicker(rng)
 
-export interface WeekPoint {
-  week: string
-  [key: string]: string | number
-}
-
 const weeks = ['W20', 'W21', 'W22', 'W23', 'W24', 'W25', 'W26', 'W27', 'W28', 'W29']
 
 export const recoveryTimeTrend = weeks.map((week, i) => ({

@@ -47,22 +47,27 @@ export default function Settings() {
               <Kbd>K</Kbd>
             </span>
           </div>
-          <Separator />
-          <div className="flex items-center justify-between">
-            <span>Go to Cases</span>
-            <span className="flex gap-1">
-              <Kbd>G</Kbd>
-              <Kbd>C</Kbd>
-            </span>
-          </div>
-          <Separator />
-          <div className="flex items-center justify-between">
-            <span>Go to Dashboard</span>
-            <span className="flex gap-1">
-              <Kbd>G</Kbd>
-              <Kbd>D</Kbd>
-            </span>
-          </div>
+          {(
+            [
+              ['Go to Dashboard', 'D'],
+              ['Go to Cases', 'C'],
+              ['Go to Recovery Timeline', 'T'],
+              ['Go to AI Investigation', 'I'],
+              ['Go to Agents', 'A'],
+              ['Go to Analytics', 'N'],
+            ] as const
+          ).map(([label, key]) => (
+            <div key={key} className="contents">
+              <Separator />
+              <div className="flex items-center justify-between">
+                <span>{label}</span>
+                <span className="flex gap-1">
+                  <Kbd>G</Kbd>
+                  <Kbd>{key}</Kbd>
+                </span>
+              </div>
+            </div>
+          ))}
         </CardContent>
       </Card>
 

@@ -18,7 +18,7 @@ const levelMeta: Record<
 
 const groupOrder: AppNotification['level'][] = ['critical', 'approval', 'warning', 'info']
 
-export function NotificationCenter() {
+export function NotificationCenter({ onNavigate }: { onNavigate?: () => void }) {
   const navigate = useNavigate()
   const { items, load, markRead, markAllRead } = useNotificationStore()
 
@@ -56,6 +56,7 @@ export function NotificationCenter() {
                     key={n.id}
                     onClick={() => {
                       markRead(n.id)
+                      onNavigate?.()
                       if (n.caseId) navigate(`/cases/${n.caseId}`)
                     }}
                     className={cn(

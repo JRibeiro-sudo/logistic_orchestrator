@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Bell, ChevronRight, Moon, Pin, Sun } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -117,13 +118,14 @@ export function Topbar() {
   const theme = useUIStore((s) => s.theme)
   const setTheme = useUIStore((s) => s.setTheme)
   const unread = useNotificationStore((s) => s.items.filter((n) => !n.read).length)
+  const [notificationsOpen, setNotificationsOpen] = useState(false)
 
   return (
     <header className="flex h-14 shrink-0 items-center gap-3 border-b bg-card px-4">
       <Breadcrumbs />
       <div className="flex-1" />
       <PinnedMenu />
-      <DropdownMenu>
+      <DropdownMenu open={notificationsOpen} onOpenChange={setNotificationsOpen}>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" aria-label={`Notifications${unread ? ` (${unread} unread)` : ''}`} className="relative">
             <Bell className="h-4 w-4" />
@@ -135,7 +137,7 @@ export function Topbar() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-96 p-0">
-          <NotificationCenter />
+          <NotificationCenter onNavigate={() => setNotificationsOpen(false)} />
         </DropdownMenuContent>
       </DropdownMenu>
       <Button

@@ -38,10 +38,6 @@ export function formatDateTime(iso: string): string {
   })
 }
 
-export function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })
-}
-
 export function initials(name: string): string {
   return name
     .split(/\s+/)
