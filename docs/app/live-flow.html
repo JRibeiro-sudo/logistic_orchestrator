@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<link rel="icon" type="image/svg+xml" href="app/favicon.svg" />
 <title>Procurement Recovery Orchestrator — Live Diagram</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="description" content="Animated pipeline diagram for the Procurement Material Recovery Orchestrator prototype, with real Approve/Reject checkpoint buttons." />
@@ -372,7 +371,7 @@ h1 { font-family: ui-serif, Georgia, "Iowan Old Style", "Palatino Linotype", "Ti
 <body>
 
 <div class="page">
-  <nav class="site-nav" style="gap:8px"><a href="app/">Open the application &rarr;</a> <a href="trace-report.html">View full trace report &rarr;</a></nav>
+  <nav class="site-nav"><a href="trace-report.html">View full trace report →</a></nav>
   <header class="masthead">
     <div class="eyebrow mono">SYNTHETIC ACADEMIC PROTOTYPE &middot; SCRIPTED MODEL RESPONSES, NO LIVE API KEY</div>
     <h1>Procurement Material Recovery Orchestrator</h1>
@@ -1560,6 +1559,21 @@ h1 { font-family: ui-serif, Georgia, "Iowan Old Style", "Palatino Linotype", "Ti
   window.addEventListener("resize", layoutEdges);
 })();
 
+</script>
+<script>
+/* Theme sync shim for embedding inside the Recovery Orchestrator webapp.
+   The page's own CSS already honors :root[data-theme]. */
+(function () {
+  function apply(theme) {
+    if (theme === 'dark' || theme === 'light') {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+  }
+  apply(new URLSearchParams(location.search).get('theme'));
+  window.addEventListener('message', function (e) {
+    if (e.data && e.data.type === 'set-theme') apply(e.data.theme);
+  });
+})();
 </script>
 </body>
 </html>
