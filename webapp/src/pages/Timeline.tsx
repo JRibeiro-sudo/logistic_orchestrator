@@ -24,13 +24,13 @@ type ZoomId = (typeof ZOOM_PRESETS)[number]['id']
 
 const kindColor: Record<TimelineEventKind, string> = {
   trigger: 'hsl(var(--primary))',
-  agent: 'hsl(var(--chart-4))',
-  tool_call: 'hsl(var(--chart-4))',
+  agent: 'hsl(var(--chart-3))',
+  tool_call: 'hsl(var(--chart-3))',
   guardrail: 'hsl(var(--warning))',
   supplier_reply: 'hsl(var(--chart-2))',
   transport: 'hsl(var(--chart-1))',
   approval: 'hsl(var(--success))',
-  decision: 'hsl(var(--chart-3))',
+  decision: 'hsl(var(--chart-4))',
   execution: 'hsl(var(--success))',
   escalation: 'hsl(var(--destructive))',
   note: 'hsl(var(--muted-foreground))',

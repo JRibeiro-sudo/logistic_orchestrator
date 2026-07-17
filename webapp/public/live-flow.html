@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Procurement Recovery Orchestrator — Live Diagram</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Animated pipeline diagram for the Procurement Material Recovery Orchestrator prototype, with real Approve/Reject checkpoint buttons." />
+<style>
+:root {
+  --bg: #f4f2ec;
+  --surface: #ffffff;
+  --surface-2: #ece8de;
+  --ink: #1c2024;
+  --muted: #656d76;
+  --border: #ddd7c8;
+  --accent: #2f6f8f;
+  --accent-bg: #e2eef3;
+  --good: #2f7a4f;
+  --good-bg: #e3f0e6;
+  --bad: #a8402c;
+  --bad-bg: #f5e2dd;
+  --warn: #a8721f;
+  --warn-bg: #f4e9d3;
+  --neutral-bg: #e9e6dc;
+  --edge-idle: #cfc8b4;
+  --shadow: 0 1px 2px rgba(30, 25, 15, 0.06), 0 8px 24px -12px rgba(30, 25, 15, 0.18);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #10141a;
+    --surface: #171c24;
+    --surface-2: #1e2530;
+    --ink: #e7e9ec;
+    --muted: #8b93a1;
+    --border: #262e3a;
+    --accent: #6fb3d6;
+    --accent-bg: #16283264;
+    --good: #5fbf85;
+    --good-bg: #17301f;
+    --bad: #e2735a;
+    --bad-bg: #3a1f18;
+    --warn: #e0a83f;
+    --warn-bg: #362a12;
+    --neutral-bg: #232a35;
+    --edge-idle: #333d4a;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px -16px rgba(0, 0, 0, 0.6);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #10141a; --surface: #171c24; --surface-2: #1e2530; --ink: #e7e9ec; --muted: #8b93a1;
+  --border: #262e3a; --accent: #6fb3d6; --accent-bg: #16283264; --good: #5fbf85; --good-bg: #17301f;
+  --bad: #e2735a; --bad-bg: #3a1f18; --warn: #e0a83f; --warn-bg: #362a12; --neutral-bg: #232a35;
+  --edge-idle: #333d4a; --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px -16px rgba(0, 0, 0, 0.6);
+}
+
+:root[data-theme="light"] {
+  --bg: #f4f2ec; --surface: #ffffff; --surface-2: #ece8de; --ink: #1c2024; --muted: #656d76;
+  --border: #ddd7c8; --accent: #2f6f8f; --accent-bg: #e2eef3; --good: #2f7a4f; --good-bg: #e3f0e6;
+  --bad: #a8402c; --bad-bg: #f5e2dd; --warn: #a8721f; --warn-bg: #f4e9d3; --neutral-bg: #e9e6dc;
+  --edge-idle: #cfc8b4; --shadow: 0 1px 2px rgba(30, 25, 15, 0.06), 0 8px 24px -12px rgba(30, 25, 15, 0.18);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); overflow-x: hidden; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 15px; line-height: 1.55; }
+.mono { font-family: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Consolas, "Liberation Mono", monospace; font-variant-numeric: tabular-nums; }
+h1 { font-family: ui-serif, Georgia, "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif; text-wrap: balance; font-weight: 600; margin: 0; }
+
+.page { max-width: 1120px; margin: 0 auto; padding: 40px 24px 72px; }
+
+.masthead { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+.eyebrow { font-size: 11px; letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase; }
+.masthead h1 { font-size: 30px; line-height: 1.15; letter-spacing: -0.01em; }
+.subhead { margin: 0; color: var(--muted); font-size: 14.5px; max-width: 68ch; }
+
+/* ---------- controls ---------- */
+
+.control-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 18px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+
+.btn {
+  font: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 9px 18px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  background: var(--surface-2);
+  color: var(--ink);
+}
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn-primary:disabled { background: var(--surface-2); border-color: var(--border); color: var(--ink); }
+.btn-ghost:hover:not(:disabled) { border-color: var(--bad); color: var(--bad); }
+.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.scenario-status { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 220px; }
+#scenario-label { font-size: 13px; color: var(--muted); white-space: nowrap; }
+.progress-track { flex: 1; height: 6px; background: var(--neutral-bg); border-radius: 999px; overflow: hidden; }
+.progress-fill { height: 100%; width: 0%; background: var(--accent); border-radius: 999px; transition: width 0.25s ease; }
+
+/* ---------- legend ---------- */
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 20px;
+  padding: 0 2px;
+}
+.legend-item { display: inline-flex; align-items: center; gap: 6px; }
+.swatch { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.swatch-api { background: var(--accent); }
+.swatch-tool { background: var(--warn); }
+.swatch-human { background: #7d5fb8; }
+.swatch-warn { background: var(--warn); border: 1px dashed var(--ink); }
+.swatch-good { background: var(--good); }
+.swatch-bad { background: var(--bad); }
+.swatch-skip { background: var(--muted); opacity: 0.5; }
+
+/* ---------- diagram ---------- */
+
+.diagram-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+
+.diagram-wrap {
+  position: relative;
+  width: 1780px;
+  height: 560px;
+}
+
+.edges-layer { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.nodes-layer { position: absolute; inset: 0; }
+
+.edge-path {
+  fill: none;
+  stroke: var(--edge-idle);
+  stroke-width: 2;
+  transition: stroke 0.2s ease, stroke-width 0.2s ease;
+}
+.edge-path.edge-flowing {
+  stroke: var(--accent);
+  stroke-width: 3;
+  stroke-dasharray: 8 6;
+  animation: dash-march 0.6s linear infinite;
+}
+.edge-path.edge-good { stroke: var(--good); stroke-width: 2.5; }
+.edge-path.edge-bad { stroke: var(--bad); stroke-width: 2.5; stroke-dasharray: 5 5; }
+
+@keyframes dash-march {
+  to { stroke-dashoffset: -28; }
+}
+
+.node {
+  position: absolute;
+  width: 156px;
+  min-height: 84px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  padding: 9px 11px;
+  box-shadow: var(--shadow);
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.node-code { font-size: 10px; color: var(--muted); letter-spacing: 0.03em; }
+.node-title { font-size: 13px; font-weight: 700; line-height: 1.2; }
+.node-detail { font-size: 11px; color: var(--muted); line-height: 1.35; min-height: 14px; }
+
+.node-badge {
+  position: absolute;
+  top: -11px;
+  right: -8px;
+  font-family: ui-monospace, "SF Mono", monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  display: none;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  white-space: nowrap;
+}
+.node-badge.badge-tool { background: var(--warn); }
+.node-badge .dot { width: 5px; height: 5px; border-radius: 50%; background: #fff; animation: pulse-dot 0.9s ease-in-out infinite; }
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 0.4; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* node states */
+.node.state-call { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg), var(--shadow); }
+.node.state-call .node-badge { display: inline-flex; }
+.node.state-tool { border-color: var(--warn); box-shadow: 0 0 0 3px var(--warn-bg), var(--shadow); }
+.node.state-tool .node-badge { display: inline-flex; }
+.node.state-tool-ok { border-color: var(--warn); }
+.node.state-pending { border-color: var(--accent); border-style: dashed; }
+.node.state-resolved-good { border-color: var(--good); background: var(--good-bg); }
+.node.state-resolved-bad { border-color: var(--bad); background: var(--bad-bg); }
+.node.state-resolved-neutral { border-color: var(--accent); }
+.node.state-resolved-warn { border-color: var(--warn); background: var(--warn-bg); }
+.node.state-skipped { opacity: 0.42; border-style: dashed; }
+.node.state-injected { border-color: var(--warn); border-style: dashed; background: var(--warn-bg); }
+.node.state-injected-resolved { border-color: var(--warn); border-style: dashed; background: var(--warn-bg); }
+
+.node.human-node .node-code { color: #7d5fb8; }
+.node.human-node.state-idle { border-style: dashed; }
+.node.warn-node .node-code { color: var(--warn); }
+.node.warn-node.state-idle { border-style: dashed; opacity: 0.55; }
+
+.role-chips { display: flex; gap: 4px; margin-top: 2px; flex-wrap: wrap; }
+.role-chip {
+  font-size: 9px;
+  font-family: ui-monospace, "SF Mono", monospace;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: var(--neutral-bg);
+  color: var(--muted);
+  text-transform: capitalize;
+}
+.role-chip.approved { background: var(--good-bg); color: var(--good); }
+.role-chip.rejected { background: var(--bad-bg); color: var(--bad); }
+
+/* ---------- interactive checkpoint panel ---------- */
+
+.interaction-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--surface);
+  border: 1.5px solid #7d5fb8;
+  border-radius: 10px;
+  padding: 16px 20px;
+  box-shadow: 0 0 0 4px rgba(125, 95, 184, 0.14), var(--shadow);
+  margin-bottom: 20px;
+  animation: interaction-in 0.3s ease;
+}
+.interaction-panel[hidden] { display: none; }
+
+@keyframes interaction-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.interaction-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.interaction-eyebrow { font-size: 11px; letter-spacing: 0.06em; color: #7d5fb8; text-transform: uppercase; }
+.interaction-role { font-size: 16px; font-weight: 700; text-transform: capitalize; color: var(--ink); }
+.interaction-body { margin: 0; font-size: 14.5px; color: var(--ink); max-width: 68ch; }
+
+.interaction-buttons { display: flex; gap: 10px; }
+.btn-approve, .btn-reject {
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px 22px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1.5px solid;
+}
+.btn-approve { background: var(--good); border-color: var(--good); color: #fff; }
+.btn-approve:hover { filter: brightness(1.08); }
+.btn-reject { background: transparent; border-color: var(--bad); color: var(--bad); }
+.btn-reject:hover { background: var(--bad-bg); }
+.btn-approve:focus-visible, .btn-reject:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .interaction-panel { animation: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .edge-path.edge-flowing { animation: none; stroke-dasharray: none; }
+  .node-badge .dot { animation: none; }
+  .node { transition: none; }
+}
+
+/* ---------- log panel ---------- */
+
+.log-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  margin-bottom: 32px;
+  overflow: hidden;
+}
+.log-head {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+.log-count { color: var(--accent); }
+.log-body {
+  height: 220px;
+  overflow-y: auto;
+  padding: 10px 16px;
+  font-family: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+.log-placeholder { color: var(--muted); font-style: italic; }
+.log-line { color: var(--ink); white-space: pre-wrap; opacity: 0; animation: log-in 0.25s ease forwards; }
+.log-line .tag { color: var(--accent); margin-right: 6px; }
+.log-line.tag-scenario { color: var(--accent); font-weight: 700; margin-top: 8px; }
+.log-line.tag-bad { color: var(--bad); }
+.log-line.tag-good { color: var(--good); }
+
+@keyframes log-in { to { opacity: 1; } }
+
+/* ---------- footer ---------- */
+
+.page-footer { border-top: 1px solid var(--border); padding-top: 18px; color: var(--muted); font-size: 12.5px; }
+
+@media (max-width: 640px) {
+  .masthead h1 { font-size: 24px; }
+  .control-bar { flex-direction: column; align-items: stretch; }
+  .scenario-status { width: 100%; }
+}
+
+.site-nav {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 4px;
+}
+.site-nav a {
+  font-family: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Consolas, monospace;
+  font-size: 12.5px;
+  color: var(--accent);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.site-nav a:hover { border-color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <nav class="site-nav"><a href="trace-report.html">View full trace report →</a></nav>
+  <header class="masthead">
+    <div class="eyebrow mono">SYNTHETIC ACADEMIC PROTOTYPE &middot; SCRIPTED MODEL RESPONSES, NO LIVE API KEY</div>
+    <h1>Procurement Material Recovery Orchestrator</h1>
+    <p class="subhead">Animated pipeline diagram &middot; watch the trigger, the Claude API calls, and the mocked tool calls fire automatically &mdash; then the diagram pauses at the human checkpoint and waits for <strong>you</strong> to click Approve or Reject.</p>
+  </header>
+
+  <div class="control-bar">
+    <button id="btn-start" class="btn btn-primary">▶ Start</button>
+    <button id="btn-stop" class="btn btn-ghost" disabled>■ Stop</button>
+    <div class="scenario-status">
+      <span id="scenario-label" class="mono">Ready</span>
+      <div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span class="legend-item"><span class="swatch swatch-api"></span>Claude API call</span>
+    <span class="legend-item"><span class="swatch swatch-tool"></span>Mocked tool call</span>
+    <span class="legend-item"><span class="swatch swatch-human"></span>Human decision &mdash; you click</span>
+    <span class="legend-item"><span class="swatch swatch-warn"></span>Escalated to manual review</span>
+    <span class="legend-item"><span class="swatch swatch-good"></span>Confirmed / approved</span>
+    <span class="legend-item"><span class="swatch swatch-bad"></span>Rejected / blocked</span>
+    <span class="legend-item"><span class="swatch swatch-skip"></span>Skipped / below threshold</span>
+  </div>
+
+  <div class="diagram-scroll">
+    <div class="diagram-wrap" id="diagram-wrap">
+      <svg id="edges-svg" class="edges-layer"></svg>
+      <div class="nodes-layer" id="nodes-layer"></div>
+    </div>
+  </div>
+
+  <div id="interaction-panel" class="interaction-panel" role="alertdialog" aria-labelledby="interaction-role" aria-describedby="interaction-body" hidden>
+    <div class="interaction-head">
+      <span class="interaction-eyebrow mono">ACTION NEEDED &middot; role</span>
+      <span id="interaction-role" class="interaction-role mono">—</span>
+    </div>
+    <p id="interaction-body" class="interaction-body">—</p>
+    <div class="interaction-buttons">
+      <button id="btn-approve" class="btn btn-approve">✓ Approve</button>
+      <button id="btn-reject" class="btn btn-reject">✕ Reject</button>
+    </div>
+  </div>
+
+  <div class="log-panel">
+    <div class="log-head">
+      <span class="mono">EVENT LOG</span>
+      <span id="log-count" class="mono log-count">0</span>
+    </div>
+    <div class="log-body" id="log-body">
+      <div class="log-placeholder">Press Start to run Scenario 1 → 2 → 3 in sequence. You'll be asked to Approve or Reject at each human checkpoint.</div>
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    <p>Trigger through synthesis are real pipeline output from a scripted Anthropic client (deterministic wiring is live; AI content is pre-written to keep this demo reproducible). The human checkpoint is genuinely interactive — your click decides whether execution happens. When the guardrail blocks every action (or nothing was ever confirmed), the case is escalated to manual review rather than silently closed — see the "Manual review" node.</p>
+  </footer>
+</div>
+
+<script id="steps-data" type="application/json">
+[
+  {
+    "key": "s1",
+    "title": "Scenario 1 \u00b7 Transport delay",
+    "case_id": "CASE-6486AD4420",
+    "steps": [
+      {
+        "node": null,
+        "state": "__reset__",
+        "edge": null,
+        "log": null,
+        "badge": null,
+        "kind": null,
+        "dur": 300,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "trigger",
+        "state": "resolved-neutral",
+        "edge": null,
+        "log": "Case CASE-6486AD4420 opened \u2014 DEMO-PN-9001: 24.0h projected coverage < 48.0h horizon (short lead-time band).",
+        "badge": null,
+        "kind": null,
+        "dur": 1200,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "triage",
+        "state": "call",
+        "edge": "trigger-triage",
+        "log": "Calling TRIAGE_MODEL \u2014 root-cause triage over synthetic PO / inbound / consumption signals...",
+        "badge": "TRIAGE_MODEL",
+        "kind": "api",
+        "dur": 1300,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "triage",
+        "state": "resolved-neutral",
+        "edge": null,
+        "log": "Triage response: Transport 0.86, Supplier capacity 0.08, Upstream supply 0.05, Demand deviation 0.04",
+        "badge": null,
+        "kind": null,
+        "dur": 1300,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "dispatch",
+        "state": "resolved-neutral",
+        "edge": "triage-dispatch",
+        "log": "Dispatch (threshold 0.35): Transport \u2192 investigate. Supplier capacity, Upstream supply, Demand deviation stay idle.",
+        "badge": null,
+        "kind": null,
+        "dur": 1100,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_supplier_capacity",
+        "state": "skipped",
+        "edge": null,
+        "log": null,
+        "badge": null,
+        "kind": null,
+        "dur": 200,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_upstream_supply",
+        "state": "skipped",
+        "edge": null,
+        "log": null,
+        "badge": null,
+        "kind": null,
+        "dur": 200,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_demand_deviation",
+        "state": "skipped",
+        "edge": null,
+        "log": null,
+        "badge": null,
+        "kind": null,
+        "dur": 200,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_transport",
+        "state": "pending",
+        "edge": "dispatch-branch_transport",
+        "log": "Transport branch activated.",
+        "badge": null,
+        "kind": null,
+        "dur": 500,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_transport",
+        "state": "tool",
+        "edge": null,
+        "log": "Transport: calling mock_carrier_tracking_lookup (read-only mocked lookup)...",
+        "badge": "mock_carrier_tracking_lookup",
+        "kind": "tool",
+        "dur": 1000,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_transport",
+        "state": "call",
+        "edge": null,
+        "log": "Transport: calling REASONING_MODEL for diagnosis + action proposal...",
+        "badge": "REASONING_MODEL",
+        "kind": "api",
+        "dur": 1300,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_transport",
+        "state": "resolved-good",
+        "edge": "branch_transport-guardrail",
+        "log": "Transport: confirmed (conf 0.88) \u2192 Expedite freight, \u20ac420",
+        "badge": null,
+        "kind": null,
+        "dur": 1300,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "guardrail",
+        "state": "call",
+        "edge": null,
+        "log": "Calling REASONING_MODEL \u2014 action guardrail checking 1 confirmed action(s) together for contradictions / missing cost / overcommitment...",
+        "badge": "REASONING_MODEL",
+        "kind": "api",
+        "dur": 1400,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "guardrail",
+        "state": "resolved-good",
+        "edge": null,
+        "log": "Guardrail: Transport action passed.",
+        "badge": null,
+        "kind": null,
+        "dur": 900,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "guardrail",
+        "state": "resolved-good",
+        "edge": null,
+        "log": null,
+        "badge": null,
+        "kind": null,
+        "dur": 200,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "synthesis",
+        "state": "call",
+        "edge": "guardrail-synthesis",
+        "log": "Calling REASONING_MODEL \u2014 ranking guardrail-passed actions, picking one recommendation...",
+        "badge": "REASONING_MODEL",
+        "kind": "api",
+        "dur": 1300,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "synthesis",
+        "state": "resolved-good",
+        "edge": null,
+        "log": "Synthesis: recommend Expedite freight on Transport, \u20ac420, impact_tier=low.",
+        "badge": null,
+        "kind": null,
+        "dur": 1300,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "checkpoint",
+        "state": "interactive-checkpoint",
+        "edge": "synthesis-checkpoint",
+        "roles": [
+          "planner"
+        ],
+        "action": {
+          "branch": "transport",
+          "action": "expedite_freight",
+          "cost_eur": 420.0,
+          "impact_tier": "low"
+        },
+        "recurring_risk": false,
+        "impact_tier": "low",
+        "log": "Human checkpoint required: impact_tier=low \u2192 single planner sign-off. Waiting for your input\u2026",
+        "dur": 200
+      }
+    ]
+  },
+  {
+    "key": "s2",
+    "title": "Scenario 2 \u00b7 Supplier capacity",
+    "case_id": "CASE-A84219B81E",
+    "steps": [
+      {
+        "node": null,
+        "state": "__reset__",
+        "edge": null,
+        "log": null,
+        "badge": null,
+        "kind": null,
+        "dur": 300,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "trigger",
+        "state": "resolved-neutral",
+        "edge": null,
+        "log": "Case CASE-A84219B81E opened \u2014 DEMO-PN-9002: 200.0h projected coverage < 756.0h horizon (long lead-time band).",
+        "badge": null,
+        "kind": null,
+        "dur": 1200,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "triage",
+        "state": "call",
+        "edge": "trigger-triage",
+        "log": "Calling TRIAGE_MODEL \u2014 root-cause triage over synthetic PO / inbound / consumption signals...",
+        "badge": "TRIAGE_MODEL",
+        "kind": "api",
+        "dur": 1300,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "triage",
+        "state": "resolved-neutral",
+        "edge": null,
+        "log": "Triage response: Supplier capacity 0.79, Upstream supply 0.31, Transport 0.05, Demand deviation 0.03",
+        "badge": null,
+        "kind": null,
+        "dur": 1300,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "dispatch",
+        "state": "resolved-neutral",
+        "edge": "triage-dispatch",
+        "log": "Dispatch (threshold 0.35): Supplier capacity \u2192 investigate. Upstream supply, Transport, Demand deviation stay idle.",
+        "badge": null,
+        "kind": null,
+        "dur": 1100,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_upstream_supply",
+        "state": "skipped",
+        "edge": null,
+        "log": null,
+        "badge": null,
+        "kind": null,
+        "dur": 200,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_transport",
+        "state": "skipped",
+        "edge": null,
+        "log": null,
+        "badge": null,
+        "kind": null,
+        "dur": 200,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_demand_deviation",
+        "state": "skipped",
+        "edge": null,
+        "log": null,
+        "badge": null,
+        "kind": null,
+        "dur": 200,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_supplier_capacity",
+        "state": "pending",
+        "edge": "dispatch-branch_supplier_capacity",
+        "log": "Supplier capacity branch activated.",
+        "badge": null,
+        "kind": null,
+        "dur": 500,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_supplier_capacity",
+        "state": "tool",
+        "edge": null,
+        "log": "Supplier capacity: calling mock_send_supplier_email (outbound mocked message)...",
+        "badge": "mock_send_supplier_email",
+        "kind": "tool",
+        "dur": 1000,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_supplier_capacity",
+        "state": "tool-ok",
+        "edge": null,
+        "log": "Supplier capacity: evidence guardrail passed \u2014 template clean, mocked send proceeds.",
+        "badge": null,
+        "kind": null,
+        "dur": 700,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_supplier_capacity",
+        "state": "call",
+        "edge": null,
+        "log": "Supplier capacity: calling REASONING_MODEL for diagnosis + action proposal...",
+        "badge": "REASONING_MODEL",
+        "kind": "api",
+        "dur": 1300,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_supplier_capacity",
+        "state": "resolved-good",
+        "edge": "branch_supplier_capacity-guardrail",
+        "log": "Supplier capacity: confirmed (conf 0.83) \u2192 Capacity request, \u20ac8,400",
+        "badge": null,
+        "kind": null,
+        "dur": 1300,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "guardrail",
+        "state": "call",
+        "edge": null,
+        "log": "Calling REASONING_MODEL \u2014 action guardrail checking 1 confirmed action(s) together for contradictions / missing cost / overcommitment...",
+        "badge": "REASONING_MODEL",
+        "kind": "api",
+        "dur": 1400,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "guardrail",
+        "state": "resolved-good",
+        "edge": null,
+        "log": "Guardrail: Supplier capacity action passed.",
+        "badge": null,
+        "kind": null,
+        "dur": 900,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "guardrail",
+        "state": "resolved-good",
+        "edge": null,
+        "log": null,
+        "badge": null,
+        "kind": null,
+        "dur": 200,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "synthesis",
+        "state": "call",
+        "edge": "guardrail-synthesis",
+        "log": "Calling REASONING_MODEL \u2014 ranking guardrail-passed actions, picking one recommendation...",
+        "badge": "REASONING_MODEL",
+        "kind": "api",
+        "dur": 1300,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "synthesis",
+        "state": "resolved-good",
+        "edge": null,
+        "log": "Synthesis: recommend Capacity request on Supplier capacity, \u20ac8,400, impact_tier=high.",
+        "badge": null,
+        "kind": null,
+        "dur": 1300,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "checkpoint",
+        "state": "interactive-checkpoint",
+        "edge": "synthesis-checkpoint",
+        "roles": [
+          "procurement",
+          "production",
+          "logistics"
+        ],
+        "action": {
+          "branch": "supplier_capacity",
+          "action": "capacity_request",
+          "cost_eur": 8400.0,
+          "impact_tier": "high"
+        },
+        "recurring_risk": false,
+        "impact_tier": "high",
+        "log": "Human checkpoint required: impact_tier=high \u2192 cross-functional sign-off (3 roles). Waiting for your input\u2026",
+        "dur": 200
+      }
+    ]
+  },
+  {
+    "key": "s3",
+    "title": "Scenario 3 \u00b7 Guardrail rejection",
+    "case_id": "CASE-6E2FFA973E",
+    "steps": [
+      {
+        "node": null,
+        "state": "__reset__",
+        "edge": null,
+        "log": null,
+        "badge": null,
+        "kind": null,
+        "dur": 300,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "trigger",
+        "state": "resolved-neutral",
+        "edge": null,
+        "log": "Case CASE-6E2FFA973E opened \u2014 DEMO-PN-9003: 24.0h projected coverage < 48.0h horizon (short lead-time band).",
+        "badge": null,
+        "kind": null,
+        "dur": 1200,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "triage",
+        "state": "call",
+        "edge": "trigger-triage",
+        "log": "Calling TRIAGE_MODEL \u2014 root-cause triage over synthetic PO / inbound / consumption signals...",
+        "badge": "TRIAGE_MODEL",
+        "kind": "api",
+        "dur": 1300,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "triage",
+        "state": "resolved-neutral",
+        "edge": null,
+        "log": "Triage response: Supplier capacity 0.72, Transport 0.20, Demand deviation 0.18, Upstream supply 0.15",
+        "badge": null,
+        "kind": null,
+        "dur": 1300,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "dispatch",
+        "state": "resolved-neutral",
+        "edge": "triage-dispatch",
+        "log": "Dispatch (threshold 0.35): Supplier capacity \u2192 investigate. Upstream supply, Transport, Demand deviation stay idle.",
+        "badge": null,
+        "kind": null,
+        "dur": 1100,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_upstream_supply",
+        "state": "skipped",
+        "edge": null,
+        "log": null,
+        "badge": null,
+        "kind": null,
+        "dur": 200,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_transport",
+        "state": "skipped",
+        "edge": null,
+        "log": null,
+        "badge": null,
+        "kind": null,
+        "dur": 200,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_demand_deviation",
+        "state": "skipped",
+        "edge": null,
+        "log": null,
+        "badge": null,
+        "kind": null,
+        "dur": 200,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_supplier_capacity",
+        "state": "pending",
+        "edge": "dispatch-branch_supplier_capacity",
+        "log": "Supplier capacity branch activated.",
+        "badge": null,
+        "kind": null,
+        "dur": 500,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_supplier_capacity",
+        "state": "tool",
+        "edge": null,
+        "log": "Supplier capacity: calling mock_send_supplier_email (outbound mocked message)...",
+        "badge": "mock_send_supplier_email",
+        "kind": "tool",
+        "dur": 1000,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_supplier_capacity",
+        "state": "tool-ok",
+        "edge": null,
+        "log": "Supplier capacity: evidence guardrail passed \u2014 template clean, mocked send proceeds.",
+        "badge": null,
+        "kind": null,
+        "dur": 700,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_supplier_capacity",
+        "state": "call",
+        "edge": null,
+        "log": "Supplier capacity: calling REASONING_MODEL for diagnosis + action proposal...",
+        "badge": "REASONING_MODEL",
+        "kind": "api",
+        "dur": 1300,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_supplier_capacity",
+        "state": "resolved-good",
+        "edge": "branch_supplier_capacity-guardrail",
+        "log": "Supplier capacity: confirmed (conf 0.81) \u2192 Spot buy, \u20ac2,600",
+        "badge": null,
+        "kind": null,
+        "dur": 1300,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_upstream_supply",
+        "state": "injected",
+        "edge": null,
+        "log": "[DEMO INJECTED, not a live call] Upstream supply: [DEMO INJECTED \u2014 not a live LLM call] A concurrent investigation stream reports this part's committed production plan is being reallocated toward a higher-priority order.",
+        "badge": null,
+        "kind": null,
+        "dur": 1200,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "branch_upstream_supply",
+        "state": "injected-resolved",
+        "edge": "branch_upstream_supply-guardrail",
+        "log": "[DEMO INJECTED] Upstream supply \u2192 Reallocate plan",
+        "badge": null,
+        "kind": null,
+        "dur": 1200,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "guardrail",
+        "state": "call",
+        "edge": null,
+        "log": "Calling REASONING_MODEL \u2014 action guardrail checking 2 confirmed action(s) together for contradictions / missing cost / overcommitment...",
+        "badge": "REASONING_MODEL",
+        "kind": "api",
+        "dur": 1400,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "guardrail",
+        "state": "resolved-bad",
+        "edge": null,
+        "log": "Guardrail: Supplier capacity action TRIGGERED \u2014 Contradicts the upstream_supply branch's proposal to reallocate this same part's remaining stock away to another order \u2014 spot-buying to cover the shortage while simultaneously depleting it further is inconsistent and must be resolved by a human before either proceeds.",
+        "badge": null,
+        "kind": null,
+        "dur": 1300,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "guardrail",
+        "state": "resolved-bad",
+        "edge": null,
+        "log": "Guardrail: Upstream supply action TRIGGERED \u2014 Contradicts the supplier_capacity branch's spot-buy action for the same case; reallocating stock away while another branch is actively covering the shortage risks double-counting inventory.",
+        "badge": null,
+        "kind": null,
+        "dur": 1300,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "synthesis",
+        "state": "skipped",
+        "edge": "guardrail-synthesis",
+        "log": null,
+        "badge": null,
+        "kind": null,
+        "dur": 200,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "synthesis",
+        "state": "resolved-bad",
+        "edge": null,
+        "log": "Synthesis: no_viable_action \u2014 nothing survived the guardrail (or nothing was confirmed). Escalating instead of closing the case.",
+        "badge": null,
+        "kind": null,
+        "dur": 1300,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "manual_review",
+        "state": "resolved-warn",
+        "edge": "synthesis-manual_review",
+        "log": "Escalated to manual review: The action guardrail blocked every confirmed proposed action for this case (cross-branch contradiction, missing cost estimate, or an unsupported commitment). Automated recovery could not safely proceed \u2014 route to the standard manual procurement recovery process.",
+        "badge": null,
+        "kind": null,
+        "dur": 1500,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "manual_review",
+        "state": "resolved-warn",
+        "edge": null,
+        "log": "Human checkpoint / execution not applicable \u2014 the classic (non-AI) procurement recovery process now owns this case. The shortage risk stays open; it is not silently dropped.",
+        "badge": null,
+        "kind": null,
+        "dur": 200,
+        "roles": null,
+        "role": null
+      },
+      {
+        "node": "caselog",
+        "state": "resolved-neutral",
+        "edge": "manual_review-caselog",
+        "log": "Case persisted to SQLite. escalated_to_manual_review=true, recurring_risk=false.",
+        "badge": null,
+        "kind": null,
+        "dur": 1300,
+        "roles": null,
+        "role": null
+      }
+    ]
+  }
+]
+</script>
+
+<script>
+(function () {
+  "use strict";
+
+  var NODES = [
+    { id: "trigger", title: "Trigger", code: "3.1–3.2", x: 24, y: 215 },
+    { id: "triage", title: "Triage", code: "3.3 · AI", x: 214, y: 215 },
+    { id: "dispatch", title: "Dispatch", code: "3.4", x: 404, y: 215 },
+    { id: "branch_supplier_capacity", title: "Supplier capacity", code: "3.5", x: 594, y: 10 },
+    { id: "branch_upstream_supply", title: "Upstream supply", code: "3.5", x: 594, y: 145 },
+    { id: "branch_transport", title: "Transport", code: "3.5", x: 594, y: 280 },
+    { id: "branch_demand_deviation", title: "Demand deviation", code: "3.5", x: 594, y: 415 },
+    { id: "guardrail", title: "Action guardrail", code: "3.6 · AI", x: 814, y: 215 },
+    { id: "synthesis", title: "Synthesis", code: "3.7 · AI", x: 1004, y: 215 },
+    { id: "checkpoint", title: "Human checkpoint", code: "3.8", x: 1194, y: 130, human: true },
+    { id: "manual_review", title: "Manual review", code: "escalation", x: 1194, y: 330, warn: true },
+    { id: "execution", title: "Execution", code: "3.9", x: 1414, y: 215 },
+    { id: "caselog", title: "Case log", code: "3.10", x: 1604, y: 215 }
+  ];
+
+  var EDGES = [
+    ["trigger", "triage"],
+    ["triage", "dispatch"],
+    ["dispatch", "branch_supplier_capacity"],
+    ["dispatch", "branch_upstream_supply"],
+    ["dispatch", "branch_transport"],
+    ["dispatch", "branch_demand_deviation"],
+    ["branch_supplier_capacity", "guardrail"],
+    ["branch_upstream_supply", "guardrail"],
+    ["branch_transport", "guardrail"],
+    ["branch_demand_deviation", "guardrail"],
+    ["guardrail", "synthesis"],
+    ["synthesis", "checkpoint"],
+    ["synthesis", "manual_review"],
+    ["checkpoint", "execution"],
+    ["checkpoint", "caselog"],
+    ["execution", "caselog"],
+    ["manual_review", "caselog"]
+  ];
+
+  var nodesLayer = document.getElementById("nodes-layer");
+  var svg = document.getElementById("edges-svg");
+  var wrap = document.getElementById("diagram-wrap");
+  var logBody = document.getElementById("log-body");
+  var logCount = document.getElementById("log-count");
+  var scenarioLabel = document.getElementById("scenario-label");
+  var progressFill = document.getElementById("progress-fill");
+  var btnStart = document.getElementById("btn-start");
+  var btnStop = document.getElementById("btn-stop");
+
+  var nodeEls = {};
+  var edgeEls = {};
+
+  function extraClass(n) {
+    if (n.human) return "human-node";
+    if (n.warn) return "warn-node";
+    return "";
+  }
+
+  function buildNodes() {
+    NODES.forEach(function (n) {
+      var el = document.createElement("div");
+      var extra = extraClass(n);
+      el.className = "node state-idle" + (extra ? " " + extra : "");
+      el.dataset.extra = extra;
+      el.id = "node-" + n.id;
+      el.style.left = n.x + "px";
+      el.style.top = n.y + "px";
+      el.innerHTML =
+        '<span class="node-badge"><span class="dot"></span><span class="badge-text"></span></span>' +
+        '<div class="node-code mono">' + n.code + "</div>" +
+        '<div class="node-title">' + n.title + "</div>" +
+        '<div class="node-detail"></div>' +
+        '<div class="role-chips"></div>';
+      nodesLayer.appendChild(el);
+      nodeEls[n.id] = el;
+    });
+  }
+
+  function buildEdges() {
+    EDGES.forEach(function (pair) {
+      var id = pair[0] + "-" + pair[1];
+      var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.setAttribute("class", "edge-path");
+      path.setAttribute("id", "edge-" + id);
+      svg.appendChild(path);
+      edgeEls[id] = { path: path, from: pair[0], to: pair[1] };
+    });
+  }
+
+  function nodeCenter(n) {
+    return { x: n.x + 156, yTop: n.y, w: 156, h: 84 };
+  }
+
+  function layoutEdges() {
+    var byId = {};
+    NODES.forEach(function (n) { byId[n.id] = n; });
+    Object.keys(edgeEls).forEach(function (id) {
+      var e = edgeEls[id];
+      var from = byId[e.from], to = byId[e.to];
+      var x1 = from.x + 156, y1 = from.y + 42;
+      var x2 = to.x, y2 = to.y + 42;
+      var dx = Math.max(40, (x2 - x1) * 0.5);
+      var d = "M " + x1 + " " + y1 + " C " + (x1 + dx) + " " + y1 + ", " + (x2 - dx) + " " + y2 + ", " + x2 + " " + y2;
+      e.path.setAttribute("d", d);
+    });
+  }
+
+  function setEdge(id, cls) {
+    var e = edgeEls[id];
+    if (!e) return;
+    e.path.setAttribute("class", "edge-path" + (cls ? " " + cls : ""));
+  }
+
+  function resetDiagram() {
+    NODES.forEach(function (n) {
+      var el = nodeEls[n.id];
+      var extra = extraClass(n);
+      el.className = "node state-idle" + (extra ? " " + extra : "");
+      el.querySelector(".node-detail").textContent = "";
+      el.querySelector(".role-chips").innerHTML = "";
+      el.querySelector(".badge-text").textContent = "";
+    });
+    Object.keys(edgeEls).forEach(function (id) { setEdge(id, ""); });
+    hideInteraction();
+  }
+
+  function appendLog(text, cls) {
+    if (!text) return;
+    var placeholder = logBody.querySelector(".log-placeholder");
+    if (placeholder) placeholder.remove();
+    var line = document.createElement("div");
+    line.className = "log-line" + (cls ? " " + cls : "");
+    line.innerHTML = '<span class="tag">›</span>' + escapeHtml(text);
+    logBody.appendChild(line);
+    logBody.scrollTop = logBody.scrollHeight;
+    logCount.textContent = String(logBody.querySelectorAll(".log-line").length);
+  }
+
+  function escapeHtml(s) {
+    var d = document.createElement("div");
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  function shortDetail(state, log) {
+    if (!log) return "";
+    var cut = log.replace(/^\s*/, "");
+    if (cut.length > 62) cut = cut.slice(0, 60) + "…";
+    return cut;
+  }
+
+  function applyNodeState(nodeId, state) {
+    var el = nodeEls[nodeId];
+    if (!el) return;
+    var extra = el.dataset.extra || "";
+    el.className = "node state-" + state + (extra ? " " + extra : "");
+  }
+
+  function applyStep(st, scenarioTitle) {
+    if (st.state === "__reset__") {
+      resetDiagram();
+      scenarioLabel.textContent = scenarioTitle;
+      appendLog("── " + scenarioTitle + " ──", "tag-scenario");
+      return;
+    }
+
+    if (st.edge) {
+      var isTerminal = st.state && st.state.indexOf("resolved") === 0;
+      if (isTerminal) {
+        setEdge(st.edge, st.state.indexOf("bad") >= 0 ? "edge-bad" : "edge-good");
+      } else {
+        setEdge(st.edge, "edge-flowing");
+      }
+    }
+
+    if (st.node) {
+      var el = nodeEls[st.node];
+      applyNodeState(st.node, st.state);
+      if (st.roles) {
+        var box = el.querySelector(".role-chips");
+        box.innerHTML = "";
+        st.roles.forEach(function (r) {
+          var chip = document.createElement("span");
+          chip.className = "role-chip";
+          chip.dataset.role = r;
+          chip.textContent = r;
+          box.appendChild(chip);
+        });
+      }
+      var badgeEl = el.querySelector(".node-badge");
+      var badgeText = el.querySelector(".badge-text");
+      if (st.badge) {
+        badgeText.textContent = st.badge;
+        badgeEl.className = "node-badge" + (st.kind === "tool" ? " badge-tool" : "");
+      }
+      var detailEl = el.querySelector(".node-detail");
+      if (st.log) detailEl.textContent = shortDetail(st.state, st.log);
+    }
+
+    var cls = "";
+    if (st.state && st.state.indexOf("bad") >= 0) cls = "tag-bad";
+    if (st.state && st.state.indexOf("good") >= 0) cls = "tag-good";
+    appendLog(st.log, cls);
+  }
+
+  // ---- interactive checkpoint (real Approve/Reject clicks) ----
+
+  var ACTION_LABEL = {
+    expedite_freight: "Expedite freight",
+    spot_buy: "Spot buy",
+    capacity_request: "Capacity request",
+    reallocate_plan: "Reallocate plan",
+    none: "No action"
+  };
+  var CAUSE_LABEL = {
+    supplier_capacity: "Supplier capacity",
+    upstream_supply: "Upstream supply",
+    transport: "Transport",
+    demand_deviation: "Demand deviation"
+  };
+  var CONF_PREFIX = { expedite_freight: "FRT", spot_buy: "SPT", capacity_request: "CAP", reallocate_plan: "PLN" };
+
+  function eur(v) { return "€" + Math.round(v).toLocaleString(); }
+  function actionLabel(a) { return ACTION_LABEL[a] || a; }
+  function genConfirmationId(actionType) {
+    var prefix = CONF_PREFIX[actionType] || "CONF";
+    return prefix + "-CONF-" + Math.random().toString(16).slice(2, 10);
+  }
+
+  var interactionPanel = document.getElementById("interaction-panel");
+  var interactionRole = document.getElementById("interaction-role");
+  var interactionBody = document.getElementById("interaction-body");
+  var btnApprove = document.getElementById("btn-approve");
+  var btnReject = document.getElementById("btn-reject");
+  var currentCancel = null;
+
+  function showInteraction(role, action, roleIdx, roleTotal) {
+    return new Promise(function (resolve, reject) {
+      interactionRole.textContent = role + (roleTotal > 1 ? " (" + (roleIdx + 1) + " of " + roleTotal + ")" : "");
+      interactionBody.textContent =
+        "Approve “" + actionLabel(action.action) + "” on " + CAUSE_LABEL[action.branch] +
+        " — " + eur(action.cost_eur) + ", impact tier: " + action.impact_tier + "?";
+      interactionPanel.hidden = false;
+      requestAnimationFrame(function () { btnApprove.focus(); });
+
+      function cleanup() {
+        btnApprove.removeEventListener("click", onApprove);
+        btnReject.removeEventListener("click", onReject);
+        currentCancel = null;
+      }
+      function onApprove() { cleanup(); interactionPanel.hidden = true; resolve("approved"); }
+      function onReject() { cleanup(); interactionPanel.hidden = true; resolve("rejected"); }
+      btnApprove.addEventListener("click", onApprove);
+      btnReject.addEventListener("click", onReject);
+      currentCancel = function () { cleanup(); interactionPanel.hidden = true; reject(new Error("stopped")); };
+    });
+  }
+
+  function hideInteraction() {
+    if (currentCancel) currentCancel();
+    if (interactionPanel) interactionPanel.hidden = true;
+  }
+
+  async function runInteractiveCheckpoint(step, token) {
+    var el = nodeEls.checkpoint;
+    applyNodeState("checkpoint", "pending");
+    var box = el.querySelector(".role-chips");
+    box.innerHTML = "";
+    step.roles.forEach(function (r) {
+      var chip = document.createElement("span");
+      chip.className = "role-chip";
+      chip.dataset.role = r;
+      chip.textContent = r;
+      box.appendChild(chip);
+    });
+    el.querySelector(".node-detail").textContent = "awaiting your decision…";
+    setEdge(step.edge, "edge-flowing");
+    appendLog(step.log);
+
+    var decisions = [];
+    for (var i = 0; i < step.roles.length; i++) {
+      if (token !== playToken) return;
+      var role = step.roles[i];
+      var decision;
+      try {
+        decision = await showInteraction(role, step.action, i, step.roles.length);
+      } catch (e) {
+        return; // Stop was pressed while waiting for this click
+      }
+      if (token !== playToken) return;
+      decisions.push(decision);
+      var chip = box.querySelector('.role-chip[data-role="' + role + '"]');
+      if (chip) chip.classList.add(decision === "approved" ? "approved" : "rejected");
+      appendLog("  " + role + " → " + decision, decision === "approved" ? "tag-good" : "tag-bad");
+    }
+
+    if (token !== playToken) return;
+
+    var approved = decisions.length > 0 && decisions.every(function (d) { return d === "approved"; });
+    applyNodeState("checkpoint", approved ? "resolved-good" : "resolved-bad");
+    appendLog("Checkpoint decision: " + (approved ? "APPROVED" : "REJECTED"), approved ? "tag-good" : "tag-bad");
+    setEdge(step.edge, approved ? "edge-good" : "edge-bad");
+
+    try { await sleep(500, token); } catch (e) { return; }
+    if (token !== playToken) return;
+
+    setEdge("checkpoint-execution", approved ? "edge-good" : "edge-bad");
+    if (approved) {
+      applyNodeState("execution", "resolved-good");
+      var confId = genConfirmationId(step.action.action);
+      nodeEls.execution.querySelector(".node-detail").textContent = "executed · " + confId;
+      appendLog("Execution: " + actionLabel(step.action.action) + " — confirmation " + confId + ".", "tag-good");
+    } else {
+      applyNodeState("execution", "resolved-bad");
+      nodeEls.execution.querySelector(".node-detail").textContent = "refused — no approval";
+      appendLog("Execution REFUSED — pipeline/execution.py requires a matching, approved HumanCheckpointDecision. Checkpoint was not approved, so nothing runs. (hard constraint)", "tag-bad");
+    }
+
+    try { await sleep(600, token); } catch (e) { return; }
+    if (token !== playToken) return;
+
+    var caselogEdge = approved ? "execution-caselog" : "checkpoint-caselog";
+    setEdge(caselogEdge, approved ? "edge-good" : "edge-bad");
+    applyNodeState("caselog", step.recurring_risk ? "resolved-warn" : "resolved-neutral");
+    appendLog("Case persisted to SQLite. recurring_risk=" + (step.recurring_risk ? "true" : "false") + ".");
+
+    try { await sleep(700, token); } catch (e) { return; }
+  }
+
+  // ---- player ----
+
+  var scenarios = JSON.parse(document.getElementById("steps-data").textContent);
+  var playToken = 0;
+
+  function sleep(ms, token) {
+    return new Promise(function (resolve, reject) {
+      setTimeout(function () {
+        if (token !== playToken) { reject(new Error("stopped")); return; }
+        resolve();
+      }, ms);
+    });
+  }
+
+  function estimateTotalSteps() {
+    var total = 0;
+    scenarios.forEach(function (sc) {
+      sc.steps.forEach(function (st) {
+        total += st.state === "interactive-checkpoint" ? (st.roles.length * 2 + 3) : 1;
+      });
+    });
+    return total;
+  }
+
+  async function playAll(token) {
+    var total = estimateTotalSteps();
+    var done = 0;
+    for (var i = 0; i < scenarios.length; i++) {
+      if (token !== playToken) return;
+      var sc = scenarios[i];
+      for (var j = 0; j < sc.steps.length; j++) {
+        if (token !== playToken) return;
+        var st = sc.steps[j];
+        if (st.state === "interactive-checkpoint") {
+          await runInteractiveCheckpoint(st, token);
+          done += st.roles.length * 2 + 3;
+        } else {
+          applyStep(st, sc.title);
+          done += 1;
+          if (st.state !== "__reset__") {
+            scenarioLabel.textContent = "Scenario " + (i + 1) + " of " + scenarios.length + " · " + sc.title.split("· ")[1];
+          }
+          try {
+            await sleep(st.dur || 1000, token);
+          } catch (e) {
+            return;
+          }
+        }
+        progressFill.style.width = Math.round((done / total) * 100) + "%";
+      }
+    }
+    if (token === playToken) finish();
+  }
+
+  function finish() {
+    btnStart.disabled = false;
+    btnStart.textContent = "▶ Replay";
+    btnStop.disabled = true;
+    scenarioLabel.textContent = "Finished — all 3 scenarios complete";
+    appendLog("── all scenarios complete ──", "tag-good");
+  }
+
+  function start() {
+    playToken += 1;
+    var token = playToken;
+    logBody.innerHTML = "";
+    logCount.textContent = "0";
+    resetDiagram();
+    progressFill.style.width = "0%";
+    btnStart.disabled = true;
+    btnStop.disabled = false;
+    scenarioLabel.textContent = "Starting…";
+    playAll(token);
+  }
+
+  function stop() {
+    playToken += 1;
+    resetDiagram();
+    progressFill.style.width = "0%";
+    btnStart.disabled = false;
+    btnStart.textContent = "▶ Start";
+    btnStop.disabled = true;
+    scenarioLabel.textContent = "Stopped";
+    logBody.innerHTML = '<div class="log-placeholder">Press Start to run Scenario 1 → 2 → 3 in sequence.</div>';
+    logCount.textContent = "0";
+  }
+
+  btnStart.addEventListener("click", start);
+  btnStop.addEventListener("click", stop);
+
+  buildNodes();
+  buildEdges();
+  layoutEdges();
+  window.addEventListener("resize", layoutEdges);
+})();
+
+</script>
+<script>
+/* Theme sync shim for embedding inside the Recovery Orchestrator webapp.
+   The page's own CSS already honors :root[data-theme]. */
+(function () {
+  function apply(theme) {
+    if (theme === 'dark' || theme === 'light') {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+  }
+  apply(new URLSearchParams(location.search).get('theme'));
+  window.addEventListener('message', function (e) {
+    if (e.data && e.data.type === 'set-theme') apply(e.data.theme);
+  });
+})();
+</script>
+</body>
+</html>

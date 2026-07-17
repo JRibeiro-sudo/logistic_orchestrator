@@ -3,12 +3,19 @@ import { HashRouter, Route, Routes } from 'react-router-dom'
 import { AppShell } from '@/components/layout/AppShell'
 import { Skeleton } from '@/components/ui/misc'
 import Dashboard from '@/pages/Dashboard'
-import ComingSoon from '@/pages/ComingSoon'
+import NotFound from '@/pages/NotFound'
 
 const Settings = lazy(() => import('@/pages/Settings'))
 const Cases = lazy(() => import('@/pages/Cases'))
 const CaseDetail = lazy(() => import('@/pages/CaseDetail'))
 const Timeline = lazy(() => import('@/pages/Timeline'))
+const Investigation = lazy(() => import('@/pages/Investigation'))
+const Agents = lazy(() => import('@/pages/Agents'))
+const LiveFlow = lazy(() => import('@/pages/LiveFlow'))
+const Suppliers = lazy(() => import('@/pages/Suppliers'))
+const Escalations = lazy(() => import('@/pages/Escalations'))
+const Knowledge = lazy(() => import('@/pages/Knowledge'))
+const Analytics = lazy(() => import('@/pages/Analytics'))
 
 function PageFallback() {
   return (
@@ -19,53 +26,29 @@ function PageFallback() {
   )
 }
 
+function lazyRoute(el: React.ReactNode) {
+  return <Suspense fallback={<PageFallback />}>{el}</Suspense>
+}
+
 export default function App() {
   return (
     <HashRouter>
       <Routes>
         <Route element={<AppShell />}>
           <Route index element={<Dashboard />} />
-          <Route
-            path="cases"
-            element={
-              <Suspense fallback={<PageFallback />}>
-                <Cases />
-              </Suspense>
-            }
-          />
-          <Route
-            path="cases/:caseId"
-            element={
-              <Suspense fallback={<PageFallback />}>
-                <CaseDetail />
-              </Suspense>
-            }
-          />
-          <Route
-            path="timeline"
-            element={
-              <Suspense fallback={<PageFallback />}>
-                <Timeline />
-              </Suspense>
-            }
-          />
-          <Route path="investigation" element={<ComingSoon title="AI Investigation" phase={3} />} />
-          <Route path="agents" element={<ComingSoon title="Agents" phase={3} />} />
-          <Route path="live-flow" element={<ComingSoon title="Live Recovery Flow" phase={3} />} />
-          <Route path="suppliers" element={<ComingSoon title="Supplier View" phase={3} />} />
-          <Route path="suppliers/:supplierId" element={<ComingSoon title="Supplier View" phase={3} />} />
-          <Route path="escalations" element={<ComingSoon title="Escalations" phase={3} />} />
-          <Route path="knowledge" element={<ComingSoon title="Knowledge Base" phase={3} />} />
-          <Route path="analytics" element={<ComingSoon title="Analytics" phase={3} />} />
-          <Route
-            path="settings"
-            element={
-              <Suspense fallback={<PageFallback />}>
-                <Settings />
-              </Suspense>
-            }
-          />
-          <Route path="*" element={<ComingSoon title="Not found" phase={0} />} />
+          <Route path="cases" element={lazyRoute(<Cases />)} />
+          <Route path="cases/:caseId" element={lazyRoute(<CaseDetail />)} />
+          <Route path="timeline" element={lazyRoute(<Timeline />)} />
+          <Route path="investigation" element={lazyRoute(<Investigation />)} />
+          <Route path="agents" element={lazyRoute(<Agents />)} />
+          <Route path="live-flow" element={lazyRoute(<LiveFlow />)} />
+          <Route path="suppliers" element={lazyRoute(<Suppliers />)} />
+          <Route path="suppliers/:supplierId" element={lazyRoute(<Suppliers />)} />
+          <Route path="escalations" element={lazyRoute(<Escalations />)} />
+          <Route path="knowledge" element={lazyRoute(<Knowledge />)} />
+          <Route path="analytics" element={lazyRoute(<Analytics />)} />
+          <Route path="settings" element={lazyRoute(<Settings />)} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </HashRouter>

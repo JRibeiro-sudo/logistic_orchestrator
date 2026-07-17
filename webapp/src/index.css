@@ -36,10 +36,12 @@
     --sev-medium: 38 85% 55%;
     --sev-low: 210 15% 55%;
 
+    /* Categorical chart palette — CVD-validated, fixed order, never cycled.
+       chart-5 (red) is reserved for status/negative, not a series color. */
     --chart-1: 210 90% 58%;
-    --chart-2: 152 55% 45%;
-    --chart-3: 38 85% 55%;
-    --chart-4: 275 60% 62%;
+    --chart-2: 148 58% 36%;
+    --chart-3: 275 60% 62%;
+    --chart-4: 37 79% 44%;
     --chart-5: 0 68% 55%;
   }
 
@@ -72,6 +74,12 @@
     --sev-high: 22 85% 45%;
     --sev-medium: 34 90% 44%;
     --sev-low: 215 12% 48%;
+
+    --chart-1: 211 71% 47%;
+    --chart-2: 162 79% 27%;
+    --chart-3: 273 48% 52%;
+    --chart-4: 34 91% 35%;
+    --chart-5: 0 68% 48%;
   }
 
   * {
