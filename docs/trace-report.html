@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Procurement Recovery Orchestrator &mdash; Demo Trace</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Stage-by-stage trace report for the Procurement Material Recovery Orchestrator prototype's three demo scenarios." />
+<style>
+:root {
+  --bg: #f4f2ec;
+  --surface: #ffffff;
+  --surface-2: #ece8de;
+  --ink: #1c2024;
+  --muted: #656d76;
+  --border: #ddd7c8;
+  --accent: #2f6f8f;
+  --accent-ink: #ffffff;
+  --good: #2f7a4f;
+  --good-bg: #e3f0e6;
+  --bad: #a8402c;
+  --bad-bg: #f5e2dd;
+  --warn: #a8721f;
+  --warn-bg: #f4e9d3;
+  --neutral-bg: #e9e6dc;
+  --shadow: 0 1px 2px rgba(30, 25, 15, 0.06), 0 8px 24px -12px rgba(30, 25, 15, 0.18);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #10141a;
+    --surface: #171c24;
+    --surface-2: #1e2530;
+    --ink: #e7e9ec;
+    --muted: #8b93a1;
+    --border: #262e3a;
+    --accent: #6fb3d6;
+    --accent-ink: #0c1116;
+    --good: #5fbf85;
+    --good-bg: #17301f;
+    --bad: #e2735a;
+    --bad-bg: #3a1f18;
+    --warn: #e0a83f;
+    --warn-bg: #362a12;
+    --neutral-bg: #232a35;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px -16px rgba(0, 0, 0, 0.6);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #10141a;
+  --surface: #171c24;
+  --surface-2: #1e2530;
+  --ink: #e7e9ec;
+  --muted: #8b93a1;
+  --border: #262e3a;
+  --accent: #6fb3d6;
+  --accent-ink: #0c1116;
+  --good: #5fbf85;
+  --good-bg: #17301f;
+  --bad: #e2735a;
+  --bad-bg: #3a1f18;
+  --warn: #e0a83f;
+  --warn-bg: #362a12;
+  --neutral-bg: #232a35;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px -16px rgba(0, 0, 0, 0.6);
+}
+
+:root[data-theme="light"] {
+  --bg: #f4f2ec;
+  --surface: #ffffff;
+  --surface-2: #ece8de;
+  --ink: #1c2024;
+  --muted: #656d76;
+  --border: #ddd7c8;
+  --accent: #2f6f8f;
+  --accent-ink: #ffffff;
+  --good: #2f7a4f;
+  --good-bg: #e3f0e6;
+  --bad: #a8402c;
+  --bad-bg: #f5e2dd;
+  --warn: #a8721f;
+  --warn-bg: #f4e9d3;
+  --neutral-bg: #e9e6dc;
+  --shadow: 0 1px 2px rgba(30, 25, 15, 0.06), 0 8px 24px -12px rgba(30, 25, 15, 0.18);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.mono {
+  font-family: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Consolas, "Liberation Mono", monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+h1, h2 {
+  font-family: ui-serif, Georgia, "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
+  text-wrap: balance;
+  font-weight: 600;
+  margin: 0;
+}
+
+.page {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+/* ---------- Masthead ---------- */
+
+.masthead {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 40px;
+}
+
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.masthead h1 {
+  font-size: 38px;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+}
+
+.subhead {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+  max-width: 62ch;
+}
+
+.rule-banner {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+  margin-top: 8px;
+}
+
+.rule-mark {
+  font-family: ui-serif, Georgia, serif;
+  font-size: 22px;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.rule-banner p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink);
+  max-width: 60ch;
+}
+
+/* ---------- Summary strip (tabs) ---------- */
+
+.summary-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 36px;
+}
+
+.summary-card {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 18px;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  box-shadow: var(--shadow);
+  border-top: 3px solid var(--border);
+  transition: transform 0.12s ease, border-color 0.12s ease;
+}
+
+.summary-card:hover { transform: translateY(-1px); }
+.summary-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.summary-card[aria-selected="true"] {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), var(--shadow);
+}
+
+.summary-card.kind-good { border-top-color: var(--good); }
+.summary-card.kind-warn { border-top-color: var(--warn); }
+.summary-card.kind-bad { border-top-color: var(--bad); }
+
+.summary-title {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.summary-outcome {
+  font-family: ui-monospace, "SF Mono", monospace;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.kind-good .summary-outcome { color: var(--good); }
+.kind-warn .summary-outcome { color: var(--warn); }
+.kind-bad .summary-outcome { color: var(--bad); }
+
+.summary-desc {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+/* ---------- Scenario panel ---------- */
+
+.scenario-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.scenario-intro h2 {
+  font-size: 24px;
+}
+
+.deck {
+  margin: 0;
+  color: var(--muted);
+  max-width: 64ch;
+  font-size: 14.5px;
+}
+
+.case-id-badge {
+  align-self: flex-start;
+  font-size: 12px;
+  background: var(--neutral-bg);
+  color: var(--muted);
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-top: 4px;
+}
+
+.stage-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 48px;
+}
+
+.stage {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.stage-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+  flex-wrap: wrap;
+}
+
+.stage-code {
+  font-family: ui-monospace, "SF Mono", monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  min-width: 44px;
+}
+
+.stage-title {
+  font-weight: 600;
+  font-size: 14.5px;
+  flex: 1;
+}
+
+.stage-body {
+  padding: 16px;
+}
+
+.note {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 13.5px;
+}
+.note:last-child { margin-bottom: 0; }
+
+/* ---------- Chips ---------- */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  font-family: ui-monospace, "SF Mono", monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 3px 9px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.chip-good { background: var(--good-bg); color: var(--good); }
+.chip-bad { background: var(--bad-bg); color: var(--bad); }
+.chip-warn { background: var(--warn-bg); color: var(--warn); }
+.chip-neutral { background: var(--neutral-bg); color: var(--muted); }
+
+.mini-chip {
+  display: inline-flex;
+  align-items: center;
+  font-family: ui-monospace, "SF Mono", monospace;
+  font-size: 10.5px;
+  padding: 2px 7px;
+  border-radius: 5px;
+  margin-right: 6px;
+}
+.mini-on, .mini-action { background: var(--good-bg); color: var(--good); }
+.mini-off { background: var(--neutral-bg); color: var(--muted); }
+.mini-bad { background: var(--bad-bg); color: var(--bad); }
+.mini-warn { background: var(--warn-bg); color: var(--warn); }
+.mini-neutral { background: var(--neutral-bg); color: var(--muted); }
+
+/* ---------- kv grid ---------- */
+
+.kv-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px 20px;
+}
+
+.kv-grid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.k {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.v {
+  font-size: 14px;
+}
+
+.num-hot { color: var(--bad); font-weight: 600; }
+
+/* ---------- Likelihood bars ---------- */
+
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 130px 1fr 44px auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.bar-label { font-size: 12px; color: var(--muted); }
+
+.bar-track {
+  position: relative;
+  height: 8px;
+  background: var(--neutral-bg);
+  border-radius: 999px;
+  overflow: visible;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.bar-on { background: var(--accent); }
+.bar-off { background: var(--muted); opacity: 0.45; }
+
+.bar-threshold {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 2px;
+  background: var(--bad);
+  opacity: 0.7;
+}
+
+.bar-value { font-size: 12px; text-align: right; }
+
+/* ---------- Specialists ---------- */
+
+.specialist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.specialist-card {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 14px;
+  background: var(--bg);
+}
+
+.specialist-card.injected {
+  border-style: dashed;
+  border-color: var(--warn);
+}
+
+.specialist-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.branch-name { font-size: 13px; font-weight: 600; }
+.confidence { margin-left: auto; font-size: 11.5px; color: var(--muted); }
+
+.evidence-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.evidence-resp {
+  font-size: 11px;
+  color: var(--muted);
+  width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.explanation {
+  font-size: 13px;
+  color: var(--ink);
+  margin: 0 0 8px;
+}
+
+.injected-desc { color: var(--warn); font-style: italic; }
+
+.action-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+}
+
+/* ---------- Guardrail rows ---------- */
+
+.guardrail-row {
+  padding: 10px 0;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.guardrail-row:first-child { border-top: none; padding-top: 0; }
+.guardrail-row .explanation { flex-basis: 100%; margin: 4px 0 0; }
+
+/* ---------- Approvals ---------- */
+
+.approvals {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.approval-row {
+  display: grid;
+  grid-template-columns: 110px 1fr auto 170px;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+  padding: 6px 10px;
+  background: var(--bg);
+  border-radius: 5px;
+}
+
+.role { text-transform: capitalize; font-weight: 600; }
+.approver { color: var(--muted); }
+.ts { color: var(--muted); text-align: right; }
+
+/* ---------- Recurring panel ---------- */
+
+.recurring-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 22px 24px;
+  box-shadow: var(--shadow);
+  margin-bottom: 40px;
+}
+
+.recurring-panel h2 { font-size: 20px; margin-bottom: 4px; }
+
+.recurring-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.recurring-timeline {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto auto 1fr auto auto;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+}
+
+.timeline-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+.dot-hot { background: var(--warn); box-shadow: 0 0 0 4px var(--warn-bg); }
+.timeline-line { height: 2px; background: var(--border); }
+.tl-label { color: var(--muted); }
+
+.recurring-verdict {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+
+/* ---------- Footer ---------- */
+
+.page-footer {
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 720px) {
+  .summary-strip { grid-template-columns: 1fr; }
+  .masthead h1 { font-size: 30px; }
+  .bar-row { grid-template-columns: 100px 1fr 40px; }
+  .bar-row .mini-chip { grid-column: 1 / -1; }
+  .approval-row { grid-template-columns: 90px 1fr; row-gap: 2px; }
+  .ts { text-align: left; grid-column: 1 / -1; }
+  .recurring-timeline { grid-template-columns: 1fr; justify-items: start; }
+  .timeline-line { display: none; }
+}
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+
+.site-nav {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 4px;
+}
+.site-nav a {
+  font-family: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Consolas, monospace;
+  font-size: 12.5px;
+  color: var(--accent);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.site-nav a:hover { border-color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <nav class="site-nav"><a href="index.html">View live diagram →</a></nav>
+  <header class="masthead">
+    <div class="eyebrow mono">SYNTHETIC ACADEMIC PROTOTYPE &middot; NO REAL SUPPLIER, COST, OR BOSCH DATA</div>
+    <h1>Procurement Material Recovery<br />Orchestrator</h1>
+    <p class="subhead">Agentic workflow demo trace &middot; 3 scripted scenarios, real pipeline wiring, scripted model responses (no live API key in this run)</p>
+    <div class="rule-banner">
+      <span class="rule-mark">&sect;</span>
+      <p>Any step that commits cost, makes a promise, or changes a plan requires human approval before execution. Any step that only gathers or reads information may run autonomously.</p>
+    </div>
+  </header>
+
+  <nav class="summary-strip" role="tablist" aria-label="Scenario picker">
+    
+      <button class="summary-card kind-good" data-target="s1" role="tab" id="tab-s1" aria-controls="panel-s1" aria-selected="true">
+        <span class="summary-title">Scenario 1</span>
+        <span class="summary-outcome">Executed</span>
+        <span class="summary-desc">Low impact &middot; 1 approval</span>
+      </button>
+      <button class="summary-card kind-warn" data-target="s2" role="tab" id="tab-s2" aria-controls="panel-s2" aria-selected="false">
+        <span class="summary-title">Scenario 2</span>
+        <span class="summary-outcome">Executed</span>
+        <span class="summary-desc">High impact &middot; 3 approvals</span>
+      </button>
+      <button class="summary-card kind-bad" data-target="s3" role="tab" id="tab-s3" aria-controls="panel-s3" aria-selected="false">
+        <span class="summary-title">Scenario 3</span>
+        <span class="summary-outcome">Blocked</span>
+        <span class="summary-desc">Guardrail rejection &middot; 0 executions</span>
+      </button>
+  </nav>
+
+  <main>
+    
+    <section class="scenario-panel" id="panel-s1" role="tabpanel" aria-labelledby="tab-s1" >
+      <div class="scenario-intro">
+        <h2>Scenario 1 &middot; Transport delay</h2>
+        <p class="deck">Short lead-time part, single branch dispatched, low-cost expedite &mdash; one planner sign-off clears it for execution.</p>
+        <div class="case-id-badge mono">CASE-6486AD4420</div>
+      </div>
+      <div class="stage-list">
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.1&ndash;3.2</span>
+        <span class="stage-title">Trigger &amp; lead-time band routing</span>
+        <span class="chip chip-neutral">FIRED</span>
+      </div>
+      <div class="stage-body">
+      <div class="kv-grid">
+        <div><span class="k">Part</span><span class="v mono">DEMO-PN-9001</span></div>
+        <div><span class="k">Supplier</span><span class="v mono">SUP-DEMO-1</span></div>
+        <div><span class="k">On hand</span><span class="v mono">40 units</span></div>
+        <div><span class="k">Daily use</span><span class="v mono">40 units/day</span></div>
+        <div><span class="k">Lead time</span><span class="v mono">3 days (short band)</span></div>
+        <div><span class="k">Projected coverage</span><span class="v mono num-hot">24.0 h</span></div>
+        <div><span class="k">Coverage horizon</span><span class="v mono">48.0 h</span></div>
+        <div><span class="k">Triggered</span><span class="v mono">2026-07-17 10:56 UTC</span></div>
+      </div>
+      <p class="note">Coverage (24.0 h) fell below the short-lead-time horizon (48.0 h) &mdash; case opened automatically, no AI involved in this decision.</p>
+    </div>
+    </div>
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.3&ndash;3.4</span>
+        <span class="stage-title">Triage &amp; dispatch</span>
+        <span class="chip chip-neutral">1 branch(es) dispatched</span>
+      </div>
+      <div class="stage-body">
+      <p class="note">Fast-tier model ranks all four causes; the orchestrator dispatches every branch &ge; 0.35 likelihood (dashed line).</p>
+      <div class="bars">
+          <div class="bar-row">
+            <span class="bar-label mono">Transport</span>
+            <div class="bar-track"><div class="bar-fill bar-on" style="width:86%"></div>
+              <span class="bar-threshold" style="left:35.0%"></span>
+            </div>
+            <span class="bar-value mono">0.86</span>
+            <span class="mini-chip mini-on">dispatched</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label mono">Supplier capacity</span>
+            <div class="bar-track"><div class="bar-fill bar-off" style="width:8%"></div>
+              <span class="bar-threshold" style="left:35.0%"></span>
+            </div>
+            <span class="bar-value mono">0.08</span>
+            <span class="mini-chip mini-off">below threshold</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label mono">Upstream supply</span>
+            <div class="bar-track"><div class="bar-fill bar-off" style="width:5%"></div>
+              <span class="bar-threshold" style="left:35.0%"></span>
+            </div>
+            <span class="bar-value mono">0.05</span>
+            <span class="mini-chip mini-off">below threshold</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label mono">Demand deviation</span>
+            <div class="bar-track"><div class="bar-fill bar-off" style="width:4%"></div>
+              <span class="bar-threshold" style="left:35.0%"></span>
+            </div>
+            <span class="bar-value mono">0.04</span>
+            <span class="mini-chip mini-off">below threshold</span>
+          </div></div>
+    </div>
+    </div>
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.5</span>
+        <span class="stage-title">Specialist branches (evidence + diagnosis)</span>
+        <span class="chip chip-neutral">1 ran</span>
+      </div>
+      <div class="stage-body"><div class="specialist-grid">
+          <div class="specialist-card">
+            <div class="specialist-head">
+              <span class="mono branch-name">Transport</span>
+              <span class="chip chip-good">confirmed</span>
+              <span class="mono confidence">conf 0.88</span>
+            </div>
+            
+              <div class="evidence-line">
+                <span class="mini-chip mini-neutral">mock_carrier_tracking_lookup</span>
+                <span class="mini-chip mini-neutral">read-only</span>
+                
+                <div class="evidence-resp mono">tracking_number: TRK-DEMO-9001, found: True, delivery_id: DLV-DEMO-9001, po_id: PO-DEMO-9001, carrier: Synthetic Carrier X, status: delayed, eta: 2026-07-20</div>
+              </div>
+            <p class="explanation">The supplier confirmed the PO on schedule, but carrier tracking shows the inbound shipment sitting in a delayed status with consumption exactly on plan — this isolates the cause to a logistics/carrier delay rather than the supplier or demand.</p>
+            
+              <div class="action-line">
+                <span class="mini-chip mini-action">Expedite freight</span>
+                <span class="mono">€420</span>
+                <span class="mono">&middot; 1d recovery</span>
+              </div>
+            
+          </div></div></div>
+    </div>
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.6</span>
+        <span class="stage-title">Action guardrail (reasoning tier)</span>
+        <span class="chip chip-good">all passed</span>
+      </div>
+      <div class="stage-body">
+          <div class="guardrail-row">
+            <span class="mono branch-name">Transport</span><span class="chip chip-good">passed</span>
+            
+          </div></div>
+    </div>
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.7</span>
+        <span class="stage-title">Action synthesis</span>
+        <span class="chip chip-neutral">recommended: Expedite freight</span>
+      </div>
+      <div class="stage-body">
+      <div class="kv-grid">
+        <div><span class="k">Branch</span><span class="v mono">Transport</span></div>
+        <div><span class="k">Action</span><span class="v mono">Expedite freight</span></div>
+        <div><span class="k">Cost</span><span class="v mono">€420</span></div>
+        <div><span class="k">Impact tier</span><span class="chip chip-good">low</span></div>
+      </div></div>
+    </div>
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.8</span>
+        <span class="stage-title">Human checkpoint</span>
+        <span class="chip chip-good">APPROVED</span>
+      </div>
+      <div class="stage-body"><p class="note">Impact tier <strong>low</strong> requires single planner sign-off.</p><div class="approvals">
+          <div class="approval-row">
+            <span class="mono role">planner</span>
+            <span class="mono approver">simulated-planner</span>
+            <span class="chip chip-good">approved</span>
+            <span class="mono ts">2026-07-17 10:56 UTC</span>
+          </div></div></div>
+    </div>
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.9</span>
+        <span class="stage-title">Execution</span>
+        <span class="chip chip-good">EXECUTED</span>
+      </div>
+      <div class="stage-body">
+      <div class="kv-grid">
+        <div><span class="k">Action executed</span><span class="v mono">Expedite freight</span></div>
+        <div><span class="k">Confirmation ID</span><span class="v mono">FRT-CONF-9e15bc78</span></div>
+        <div><span class="k">Timestamp</span><span class="v mono">2026-07-17 10:56 UTC</span></div>
+      </div></div>
+    </div>
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.10</span>
+        <span class="stage-title">Case log &amp; recurring-risk flag</span>
+        <span class="chip chip-neutral">recurring_risk: false</span>
+      </div>
+      <div class="stage-body"><p class="note">Case persisted to SQLite with the full stage-by-stage trace above. Recurring-risk is a plain count of prior triggers for this part in the trailing window &mdash; informational only, never alters the pipeline.</p></div>
+    </div></div>
+    </section>
+    <section class="scenario-panel" id="panel-s2" role="tabpanel" aria-labelledby="tab-s2" hidden>
+      <div class="scenario-intro">
+        <h2>Scenario 2 &middot; Supplier capacity</h2>
+        <p class="deck">Long lead-time part with a committed-schedule impact &mdash; forces the full cross-functional checkpoint (procurement, production, logistics) before a high-cost capacity request executes.</p>
+        <div class="case-id-badge mono">CASE-A84219B81E</div>
+      </div>
+      <div class="stage-list">
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.1&ndash;3.2</span>
+        <span class="stage-title">Trigger &amp; lead-time band routing</span>
+        <span class="chip chip-neutral">FIRED</span>
+      </div>
+      <div class="stage-body">
+      <div class="kv-grid">
+        <div><span class="k">Part</span><span class="v mono">DEMO-PN-9002</span></div>
+        <div><span class="k">Supplier</span><span class="v mono">SUP-DEMO-2</span></div>
+        <div><span class="k">On hand</span><span class="v mono">300 units</span></div>
+        <div><span class="k">Daily use</span><span class="v mono">36 units/day</span></div>
+        <div><span class="k">Lead time</span><span class="v mono">21 days (long band)</span></div>
+        <div><span class="k">Projected coverage</span><span class="v mono num-hot">200.0 h</span></div>
+        <div><span class="k">Coverage horizon</span><span class="v mono">756.0 h</span></div>
+        <div><span class="k">Triggered</span><span class="v mono">2026-07-17 10:56 UTC</span></div>
+      </div>
+      <p class="note">Coverage (200.0 h) fell below the long-lead-time horizon (756.0 h) &mdash; case opened automatically, no AI involved in this decision.</p>
+    </div>
+    </div>
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.3&ndash;3.4</span>
+        <span class="stage-title">Triage &amp; dispatch</span>
+        <span class="chip chip-neutral">1 branch(es) dispatched</span>
+      </div>
+      <div class="stage-body">
+      <p class="note">Fast-tier model ranks all four causes; the orchestrator dispatches every branch &ge; 0.35 likelihood (dashed line).</p>
+      <div class="bars">
+          <div class="bar-row">
+            <span class="bar-label mono">Supplier capacity</span>
+            <div class="bar-track"><div class="bar-fill bar-on" style="width:79%"></div>
+              <span class="bar-threshold" style="left:35.0%"></span>
+            </div>
+            <span class="bar-value mono">0.79</span>
+            <span class="mini-chip mini-on">dispatched</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label mono">Upstream supply</span>
+            <div class="bar-track"><div class="bar-fill bar-off" style="width:31%"></div>
+              <span class="bar-threshold" style="left:35.0%"></span>
+            </div>
+            <span class="bar-value mono">0.31</span>
+            <span class="mini-chip mini-off">below threshold</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label mono">Transport</span>
+            <div class="bar-track"><div class="bar-fill bar-off" style="width:5%"></div>
+              <span class="bar-threshold" style="left:35.0%"></span>
+            </div>
+            <span class="bar-value mono">0.05</span>
+            <span class="mini-chip mini-off">below threshold</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label mono">Demand deviation</span>
+            <div class="bar-track"><div class="bar-fill bar-off" style="width:3%"></div>
+              <span class="bar-threshold" style="left:35.0%"></span>
+            </div>
+            <span class="bar-value mono">0.03</span>
+            <span class="mini-chip mini-off">below threshold</span>
+          </div></div>
+    </div>
+    </div>
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.5</span>
+        <span class="stage-title">Specialist branches (evidence + diagnosis)</span>
+        <span class="chip chip-neutral">1 ran</span>
+      </div>
+      <div class="stage-body"><div class="specialist-grid">
+          <div class="specialist-card">
+            <div class="specialist-head">
+              <span class="mono branch-name">Supplier capacity</span>
+              <span class="chip chip-good">confirmed</span>
+              <span class="mono confidence">conf 0.83</span>
+            </div>
+            
+              <div class="evidence-line">
+                <span class="mini-chip mini-neutral">mock_send_supplier_email</span>
+                <span class="mini-chip mini-neutral">outbound</span>
+                <div class="mini-chip mini-on">evidence guardrail: passed</div>
+                <div class="evidence-resp mono">sent: True, channel: mock_supplier_email, po_id: PO-DEMO-9002</div>
+              </div>
+            <p class="explanation">Supplier flagged the PO at_risk and nothing has shipped yet — no inbound delivery record exists at all, consistent with a genuine capacity constraint at the source rather than a transit delay.</p>
+            
+              <div class="action-line">
+                <span class="mini-chip mini-action">Capacity request</span>
+                <span class="mono">€8,400</span>
+                <span class="mono">&middot; 6d recovery</span>
+              </div>
+            
+          </div></div></div>
+    </div>
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.6</span>
+        <span class="stage-title">Action guardrail (reasoning tier)</span>
+        <span class="chip chip-good">all passed</span>
+      </div>
+      <div class="stage-body">
+          <div class="guardrail-row">
+            <span class="mono branch-name">Supplier capacity</span><span class="chip chip-good">passed</span>
+            
+          </div></div>
+    </div>
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.7</span>
+        <span class="stage-title">Action synthesis</span>
+        <span class="chip chip-neutral">recommended: Capacity request</span>
+      </div>
+      <div class="stage-body">
+      <div class="kv-grid">
+        <div><span class="k">Branch</span><span class="v mono">Supplier capacity</span></div>
+        <div><span class="k">Action</span><span class="v mono">Capacity request</span></div>
+        <div><span class="k">Cost</span><span class="v mono">€8,400</span></div>
+        <div><span class="k">Impact tier</span><span class="chip chip-bad">high</span></div>
+      </div></div>
+    </div>
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.8</span>
+        <span class="stage-title">Human checkpoint</span>
+        <span class="chip chip-good">APPROVED</span>
+      </div>
+      <div class="stage-body"><p class="note">Impact tier <strong>high</strong> requires cross-functional (3 roles).</p><div class="approvals">
+          <div class="approval-row">
+            <span class="mono role">procurement</span>
+            <span class="mono approver">simulated-procurement</span>
+            <span class="chip chip-good">approved</span>
+            <span class="mono ts">2026-07-17 10:56 UTC</span>
+          </div>
+          <div class="approval-row">
+            <span class="mono role">production</span>
+            <span class="mono approver">simulated-production</span>
+            <span class="chip chip-good">approved</span>
+            <span class="mono ts">2026-07-17 10:56 UTC</span>
+          </div>
+          <div class="approval-row">
+            <span class="mono role">logistics</span>
+            <span class="mono approver">simulated-logistics</span>
+            <span class="chip chip-good">approved</span>
+            <span class="mono ts">2026-07-17 10:56 UTC</span>
+          </div></div></div>
+    </div>
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.9</span>
+        <span class="stage-title">Execution</span>
+        <span class="chip chip-good">EXECUTED</span>
+      </div>
+      <div class="stage-body">
+      <div class="kv-grid">
+        <div><span class="k">Action executed</span><span class="v mono">Capacity request</span></div>
+        <div><span class="k">Confirmation ID</span><span class="v mono">CAP-CONF-40dfb4fd</span></div>
+        <div><span class="k">Timestamp</span><span class="v mono">2026-07-17 10:56 UTC</span></div>
+      </div></div>
+    </div>
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.10</span>
+        <span class="stage-title">Case log &amp; recurring-risk flag</span>
+        <span class="chip chip-neutral">recurring_risk: false</span>
+      </div>
+      <div class="stage-body"><p class="note">Case persisted to SQLite with the full stage-by-stage trace above. Recurring-risk is a plain count of prior triggers for this part in the trailing window &mdash; informational only, never alters the pipeline.</p></div>
+    </div></div>
+    </section>
+    <section class="scenario-panel" id="panel-s3" role="tabpanel" aria-labelledby="tab-s3" hidden>
+      <div class="scenario-intro">
+        <h2>Scenario 3 &middot; Guardrail rejection</h2>
+        <p class="deck">Two branches propose directly contradictory actions on the same case &mdash; the action guardrail catches it, synthesis finds no viable action, and execution never runs.</p>
+        <div class="case-id-badge mono">CASE-6E2FFA973E</div>
+      </div>
+      <div class="stage-list">
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.1&ndash;3.2</span>
+        <span class="stage-title">Trigger &amp; lead-time band routing</span>
+        <span class="chip chip-neutral">FIRED</span>
+      </div>
+      <div class="stage-body">
+      <div class="kv-grid">
+        <div><span class="k">Part</span><span class="v mono">DEMO-PN-9003</span></div>
+        <div><span class="k">Supplier</span><span class="v mono">SUP-DEMO-1</span></div>
+        <div><span class="k">On hand</span><span class="v mono">60 units</span></div>
+        <div><span class="k">Daily use</span><span class="v mono">60 units/day</span></div>
+        <div><span class="k">Lead time</span><span class="v mono">3 days (short band)</span></div>
+        <div><span class="k">Projected coverage</span><span class="v mono num-hot">24.0 h</span></div>
+        <div><span class="k">Coverage horizon</span><span class="v mono">48.0 h</span></div>
+        <div><span class="k">Triggered</span><span class="v mono">2026-07-17 10:56 UTC</span></div>
+      </div>
+      <p class="note">Coverage (24.0 h) fell below the short-lead-time horizon (48.0 h) &mdash; case opened automatically, no AI involved in this decision.</p>
+    </div>
+    </div>
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.3&ndash;3.4</span>
+        <span class="stage-title">Triage &amp; dispatch</span>
+        <span class="chip chip-neutral">1 branch(es) dispatched</span>
+      </div>
+      <div class="stage-body">
+      <p class="note">Fast-tier model ranks all four causes; the orchestrator dispatches every branch &ge; 0.35 likelihood (dashed line).</p>
+      <div class="bars">
+          <div class="bar-row">
+            <span class="bar-label mono">Supplier capacity</span>
+            <div class="bar-track"><div class="bar-fill bar-on" style="width:72%"></div>
+              <span class="bar-threshold" style="left:35.0%"></span>
+            </div>
+            <span class="bar-value mono">0.72</span>
+            <span class="mini-chip mini-on">dispatched</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label mono">Transport</span>
+            <div class="bar-track"><div class="bar-fill bar-off" style="width:20%"></div>
+              <span class="bar-threshold" style="left:35.0%"></span>
+            </div>
+            <span class="bar-value mono">0.20</span>
+            <span class="mini-chip mini-off">below threshold</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label mono">Demand deviation</span>
+            <div class="bar-track"><div class="bar-fill bar-off" style="width:18%"></div>
+              <span class="bar-threshold" style="left:35.0%"></span>
+            </div>
+            <span class="bar-value mono">0.18</span>
+            <span class="mini-chip mini-off">below threshold</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label mono">Upstream supply</span>
+            <div class="bar-track"><div class="bar-fill bar-off" style="width:15%"></div>
+              <span class="bar-threshold" style="left:35.0%"></span>
+            </div>
+            <span class="bar-value mono">0.15</span>
+            <span class="mini-chip mini-off">below threshold</span>
+          </div></div>
+    </div>
+    </div>
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.5</span>
+        <span class="stage-title">Specialist branches (evidence + diagnosis)</span>
+        <span class="chip chip-neutral">2 ran</span>
+      </div>
+      <div class="stage-body"><div class="specialist-grid">
+          <div class="specialist-card">
+            <div class="specialist-head">
+              <span class="mono branch-name">Supplier capacity</span>
+              <span class="chip chip-good">confirmed</span>
+              <span class="mono confidence">conf 0.81</span>
+            </div>
+            
+              <div class="evidence-line">
+                <span class="mini-chip mini-neutral">mock_send_supplier_email</span>
+                <span class="mini-chip mini-neutral">outbound</span>
+                <div class="mini-chip mini-on">evidence guardrail: passed</div>
+                <div class="evidence-resp mono">sent: True, channel: mock_supplier_email, po_id: PO-DEMO-9003</div>
+              </div>
+            <p class="explanation">Supplier confirmed a capacity constraint on this line and cannot expedite the original PO; recommends an emergency spot buy from an approved backup source.</p>
+            
+              <div class="action-line">
+                <span class="mini-chip mini-action">Spot buy</span>
+                <span class="mono">€2,600</span>
+                <span class="mono">&middot; 3d recovery</span>
+              </div>
+            
+          </div>
+          <div class="specialist-card injected">
+            <div class="specialist-head">
+              <span class="mono branch-name">Upstream supply</span>
+              <span class="chip chip-good">confirmed</span> <span class="chip chip-warn">demo-injected fixture, not a live call</span>
+              <span class="mono confidence">conf 0.75</span>
+            </div>
+            <div class="evidence-line"><span class="mini-chip mini-warn">no live evidence call &mdash; see explanation</span></div>
+            <p class="explanation">[DEMO INJECTED — not a live LLM call] A concurrent investigation stream reports this part&#x27;s committed production plan is being reallocated toward a higher-priority order.</p>
+            
+              <div class="action-line">
+                <span class="mini-chip mini-action">Reallocate plan</span>
+                <span class="mono">€0</span>
+                <span class="mono">&middot; 0d recovery</span>
+              </div>
+            <p class="explanation injected-desc">[DEMO INJECTED] Reallocate this part&#x27;s remaining safety stock away to a higher-priority order.</p>
+          </div></div></div>
+    </div>
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.6</span>
+        <span class="stage-title">Action guardrail (reasoning tier)</span>
+        <span class="chip chip-bad">blocked an action</span>
+      </div>
+      <div class="stage-body">
+          <div class="guardrail-row">
+            <span class="mono branch-name">Supplier capacity</span><span class="chip chip-bad">TRIGGERED</span>
+            <p class="explanation">Contradicts the upstream_supply branch&#x27;s proposal to reallocate this same part&#x27;s remaining stock away to another order — spot-buying to cover the shortage while simultaneously depleting it further is inconsistent and must be resolved by a human before either proceeds.</p>
+          </div>
+          <div class="guardrail-row">
+            <span class="mono branch-name">Upstream supply</span><span class="chip chip-bad">TRIGGERED</span>
+            <p class="explanation">Contradicts the supplier_capacity branch&#x27;s spot-buy action for the same case; reallocating stock away while another branch is actively covering the shortage risks double-counting inventory.</p>
+          </div></div>
+    </div>
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.7</span>
+        <span class="stage-title">Action synthesis</span>
+        <span class="chip chip-bad">no viable action</span>
+      </div>
+      <div class="stage-body"><p class="note">No guardrail-passed action survived &mdash; synthesis explicitly reports <span class="mono">no_viable_action</span>. Nothing to approve or execute.</p></div>
+    </div>
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.8</span>
+        <span class="stage-title">Human checkpoint</span>
+        <span class="chip chip-neutral">SKIPPED</span>
+      </div>
+      <div class="stage-body"><p class="note">No recommended action &mdash; nothing to route for approval.</p></div>
+    </div>
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.9</span>
+        <span class="stage-title">Execution</span>
+        <span class="chip chip-bad">NOT EXECUTED</span>
+      </div>
+      <div class="stage-body"><p class="note">Execution module was never called &mdash; no logged, approved checkpoint exists for this case. This is the hard constraint from Section 2/8, enforced in code by <span class="mono">pipeline/execution.py</span>.</p></div>
+    </div>
+    <div class="stage">
+      <div class="stage-head">
+        <span class="stage-code">3.10</span>
+        <span class="stage-title">Case log &amp; recurring-risk flag</span>
+        <span class="chip chip-neutral">recurring_risk: false</span>
+      </div>
+      <div class="stage-body"><p class="note">Case persisted to SQLite with the full stage-by-stage trace above. Recurring-risk is a plain count of prior triggers for this part in the trailing window &mdash; informational only, never alters the pipeline.</p></div>
+    </div></div>
+    </section>
+  </main>
+
+  
+  <section class="recurring-panel">
+    <h2>Preventive flag &middot; recurring risk</h2>
+    <p class="deck">A plain SQL count over the case log &mdash; not an AI call &mdash; informational only.</p>
+    <div class="recurring-grid">
+      <div class="recurring-timeline">
+        <div class="timeline-dot"></div><span class="mono">2026-05-13</span><span class="tl-label">trigger 1</span>
+        <div class="timeline-line"></div>
+        <div class="timeline-dot"></div><span class="mono">2026-06-27</span><span class="tl-label">trigger 2</span>
+        <div class="timeline-line"></div>
+        <div class="timeline-dot dot-hot"></div><span class="mono">2026-07-17</span><span class="tl-label">trigger 3 &rarr; flag fires</span>
+      </div>
+      <div class="recurring-verdict">
+        <span class="mono">DEMO-PN-9001</span> triggered <strong>3</strong> times within the trailing <strong>90</strong> days (threshold: <strong>3</strong>).
+        <span class="chip chip-warn">recurring_risk: true</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="page-footer">
+    <p>Generated from <span class="mono">demo_scenarios.py</span> pipeline wiring with a scripted Anthropic client standing in for live reasoning calls. Run <span class="mono">python demo_scenarios.py all</span> with a real <span class="mono">ANTHROPIC_API_KEY</span> for genuine model output.</p>
+  </footer>
+</div>
+
+<script>
+  const cards = document.querySelectorAll('.summary-card');
+  const panels = document.querySelectorAll('.scenario-panel');
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      const target = card.dataset.target;
+      cards.forEach(c => c.setAttribute('aria-selected', c === card ? 'true' : 'false'));
+      panels.forEach(p => {
+        if (p.id === 'panel-' + target) { p.hidden = false; } else { p.hidden = true; }
+      });
+    });
+  });
+</script>
+</body>
+</html>
