@@ -97,3 +97,30 @@ def synthesize(
         recommended_action=recommended_action,
         no_viable_action=no_viable_action,
     )
+
+
+def check_escalation(
+    confirmed_diagnoses: list[SpecialistDiagnosis],
+    synthesis: ActionSynthesis,
+) -> tuple[bool, str | None]:
+    """Extension beyond the original Section 3.7 spec: when the automated
+    pipeline cannot converge on a trustworthy recommended action, the case
+    must not simply be closed with no follow-up — the shortage risk is
+    still live. This deterministic check (no AI call) flags the case for
+    manual investigation via the standard, non-AI procurement recovery
+    process whenever synthesis reports no_viable_action, and records why.
+    """
+    if not synthesis.no_viable_action:
+        return False, None
+    if confirmed_diagnoses:
+        return True, (
+            "The action guardrail blocked every confirmed proposed action for this case "
+            "(cross-branch contradiction, missing cost estimate, or an unsupported "
+            "commitment). Automated recovery could not safely proceed — route to the "
+            "standard manual procurement recovery process."
+        )
+    return True, (
+        "No specialist branch confirmed a root cause with a viable recovery action. "
+        "Automated recovery could not identify a trustworthy cause or action — route to "
+        "the standard manual procurement recovery process."
+    )

@@ -21,7 +21,7 @@ from pipeline.guardrails import run_action_guardrail
 from pipeline.human_checkpoint import ApproverInputFn, _default_input
 from pipeline.orchestrator import dispatch, dispatched_branch_names
 from pipeline.specialists import BRANCH_REGISTRY
-from pipeline.synthesis import synthesize
+from pipeline.synthesis import check_escalation, synthesize
 from pipeline.trigger import scan_all_parts
 from schemas import CaseRecord, CoverageHorizonDecision, ShortageCase
 
@@ -98,6 +98,10 @@ def process_case(
     else:
         log("    no viable action found — nothing to approve or execute")
 
+    escalated, escalation_reason = check_escalation(confirmed_diagnoses, synthesis_result)
+    record.escalated_to_manual_review = escalated
+    record.escalation_reason = escalation_reason
+
     if synthesis_result.recommended_action is not None:
         log("[3.8 Human checkpoint]")
         checkpoint = human_checkpoint.run_checkpoint(shortage_case, synthesis_result, config, input_fn=input_fn)
@@ -112,7 +116,8 @@ def process_case(
         else:
             log("[3.9 Execution] SKIPPED — checkpoint was not approved")
     else:
-        log("[3.8/3.9 Human checkpoint / Execution] SKIPPED — no recommended action")
+        log(f"[Escalation → manual review] {escalation_reason}")
+        log("[3.8/3.9 Human checkpoint / Execution] SKIPPED — case escalated to the standard manual procurement recovery process instead. The shortage risk is still open; it is not silently closed.")
 
     recurring_risk = case_log.compute_recurring_risk(shortage_case.part_number, config, shortage_case.triggered_at)
     record.recurring_risk = recurring_risk

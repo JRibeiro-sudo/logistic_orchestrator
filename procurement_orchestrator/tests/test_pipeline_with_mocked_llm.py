@@ -176,3 +176,9 @@ def test_action_guardrail_batch_rejects_a_flagged_branch():
         synthesis_result = synthesize(case, [], config)  # nothing passed the guardrail
         assert synthesis_result.recommended_action is None
         assert synthesis_result.no_viable_action is True
+
+        from pipeline.synthesis import check_escalation
+
+        escalated, reason = check_escalation([diag_a, diag_b], synthesis_result)
+        assert escalated is True
+        assert "guardrail" in reason.lower()

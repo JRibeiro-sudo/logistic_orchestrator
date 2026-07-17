@@ -97,7 +97,7 @@ def scenario_high_impact() -> None:
 
 
 def scenario_guardrail_rejection() -> None:
-    """3. Guardrail rejection — contradictory actions, no execution.
+    """3. Guardrail rejection — contradictory actions, escalated to manual review.
 
     DEMO-PN-9003 runs the full LIVE pipeline through triage, dispatch, and
     every dispatched specialist branch's real evidence gathering and
@@ -110,7 +110,13 @@ def scenario_guardrail_rejection() -> None:
     live branch proposing to expedite/spot-buy to COVER this shortage. The
     REAL action-guardrail LLM call then evaluates all of them together and
     is expected to flag the contradiction, excluding it from synthesis so
-    no execution occurs. The case log records the rejection.
+    no execution occurs.
+
+    Critically, the case is NOT simply closed at that point: the shortage
+    risk is still real, so pipeline/synthesis.py::check_escalation flags it
+    escalated_to_manual_review=True and the case log records why, routing
+    it to the standard (non-AI) procurement recovery process instead of
+    silently dropping it.
     """
     print("\n### SCENARIO 3: Guardrail rejection (contradictory actions) ###")
     config = load_config()
@@ -212,6 +218,12 @@ def scenario_guardrail_rejection() -> None:
 
     record = CaseRecord(**record_kwargs)
 
+    from pipeline.synthesis import check_escalation
+
+    escalated, escalation_reason = check_escalation(confirmed_diagnoses, synthesis_result)
+    record.escalated_to_manual_review = escalated
+    record.escalation_reason = escalation_reason
+
     if synthesis_result.recommended_action is not None:
         print("[3.8 Human checkpoint] a viable action survived the guardrail — proceeding to approval")
         from pipeline import human_checkpoint
@@ -225,11 +237,15 @@ def scenario_guardrail_rejection() -> None:
             record.execution = exec_result
             print(f"[3.9 Execution] EXECUTED action={exec_result.action_type}")
     else:
-        print("[3.8/3.9 Human checkpoint / Execution] SKIPPED — guardrail left no viable action, nothing to approve or execute")
+        print(f"[Escalation → manual review] {escalation_reason}")
+        print("[3.8/3.9 Human checkpoint / Execution] SKIPPED — case escalated to the standard manual procurement recovery process. The shortage risk stays open; it is not silently dropped.")
 
     record.recurring_risk = case_log.compute_recurring_risk(shortage_case.part_number, config, shortage_case.triggered_at)
     case_log.save_case(record, config)
-    print(f"[3.10 Case log] persisted. guardrail_triggered_at_least_once={any_triggered}  execution_occurred={record.execution is not None}")
+    print(
+        f"[3.10 Case log] persisted. guardrail_triggered_at_least_once={any_triggered}  "
+        f"execution_occurred={record.execution is not None}  escalated_to_manual_review={record.escalated_to_manual_review}"
+    )
 
 
 def scenario_recurring_risk() -> None:

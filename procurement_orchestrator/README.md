@@ -46,6 +46,19 @@ approvals to back it. This is asserted by `tests/test_hard_constraint.py`.
 | 3.9 Execution | `pipeline/execution.py` | deterministic; hard-gated on 3.8 |
 | 3.10 Case log + recurring risk | `pipeline/case_log.py` | SQLite persistence; recurring-risk is a plain SQL count, not AI |
 
+### Extension beyond the original spec: escalation to manual review
+
+A guardrail rejection (or a case where no branch ever confirmed a root
+cause) is not the same as "nothing to do" — the material shortage risk is
+still real. `pipeline/synthesis.py::check_escalation` is a deterministic
+(no AI) check: whenever `ActionSynthesis.no_viable_action` is true, it sets
+`CaseRecord.escalated_to_manual_review=True` with a specific
+`escalation_reason` (distinguishing "the guardrail blocked every confirmed
+action" from "nothing was ever confirmed"), so the case is explicitly
+routed to the standard, non-AI procurement recovery process instead of
+being silently closed. `main.py` and `demo_scenarios.py` log this
+transition; see `tests/test_escalation.py`.
+
 Shared infrastructure:
 
 - `schemas.py` — every pydantic model referenced above; every LLM call in
@@ -103,7 +116,9 @@ demonstrate the action guardrail's cross-branch contradiction check without
 depending on two live branches happening to disagree on a given run, that
 scenario injects one clearly-labeled synthetic diagnosis (not a live LLM
 call) alongside the live ones before the real guardrail evaluates all of
-them together.
+them together. That scenario's case does not simply end there either: it
+is flagged `escalated_to_manual_review=True` and routed to the standard
+manual process (see "Extension beyond the original spec" above).
 
 ## Tests
 
@@ -118,6 +133,10 @@ python -m pytest tests/ -v
   low-impact cases get exactly one planner prompt, high-impact cases get
   exactly three sequential role prompts, and any single rejection blocks
   execution. Runs with no API key required.
+- `tests/test_escalation.py` — asserts `check_escalation` flags a case
+  correctly (and with the right reason) whenever the guardrail blocks every
+  confirmed action or nothing was ever confirmed, and leaves normal cases
+  untouched. Runs with no API key required.
 - `tests/test_pipeline_with_mocked_llm.py` — exercises the full pipeline
   wiring (schema validation, dispatch, evidence guardrail, action
   guardrail, synthesis, checkpoint, execution) with the Anthropic client

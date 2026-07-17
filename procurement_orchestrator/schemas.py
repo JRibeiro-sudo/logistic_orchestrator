@@ -244,4 +244,10 @@ class CaseRecord(BaseModel):
     checkpoint: HumanCheckpointDecision | None = None
     execution: ExecutionResult | None = None
     recurring_risk: bool = False
+    # Extension beyond the original spec (see pipeline/synthesis.py::check_escalation):
+    # set whenever synthesis reports no_viable_action, so a case where the
+    # automated pipeline can't converge on a trustworthy action is routed to
+    # manual investigation instead of being silently closed.
+    escalated_to_manual_review: bool = False
+    escalation_reason: str | None = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
