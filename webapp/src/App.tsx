@@ -6,6 +6,9 @@ import Dashboard from '@/pages/Dashboard'
 import ComingSoon from '@/pages/ComingSoon'
 
 const Settings = lazy(() => import('@/pages/Settings'))
+const Cases = lazy(() => import('@/pages/Cases'))
+const CaseDetail = lazy(() => import('@/pages/CaseDetail'))
+const Timeline = lazy(() => import('@/pages/Timeline'))
 
 function PageFallback() {
   return (
@@ -22,9 +25,30 @@ export default function App() {
       <Routes>
         <Route element={<AppShell />}>
           <Route index element={<Dashboard />} />
-          <Route path="cases" element={<ComingSoon title="Cases" phase={2} />} />
-          <Route path="cases/:caseId" element={<ComingSoon title="Case Detail" phase={2} />} />
-          <Route path="timeline" element={<ComingSoon title="Recovery Timeline" phase={2} />} />
+          <Route
+            path="cases"
+            element={
+              <Suspense fallback={<PageFallback />}>
+                <Cases />
+              </Suspense>
+            }
+          />
+          <Route
+            path="cases/:caseId"
+            element={
+              <Suspense fallback={<PageFallback />}>
+                <CaseDetail />
+              </Suspense>
+            }
+          />
+          <Route
+            path="timeline"
+            element={
+              <Suspense fallback={<PageFallback />}>
+                <Timeline />
+              </Suspense>
+            }
+          />
           <Route path="investigation" element={<ComingSoon title="AI Investigation" phase={3} />} />
           <Route path="agents" element={<ComingSoon title="Agents" phase={3} />} />
           <Route path="live-flow" element={<ComingSoon title="Live Recovery Flow" phase={3} />} />
